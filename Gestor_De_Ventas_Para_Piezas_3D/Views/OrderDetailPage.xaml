@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.OrderDetailPage"
+             Title="Detalle del Pedido"
+             BackgroundColor="#F0F2F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Encabezado -->
+            <Label Text="Pedido seleccionado" 
+                   FontSize="24" FontAttributes="Bold" TextColor="#1F2937" 
+                   HorizontalOptions="Center"/>
+
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="20" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Información del Pedido" FontSize="18" TextColor="#1F2937" HorizontalOptions="Center" FontAttributes="Bold"/>
+
+                    <!-- ID (Solo lectura) -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="ID" FontAttributes="Bold" TextColor="Gray"/>
+                        <Frame BackgroundColor="#E5E7EB" CornerRadius="10" Padding="10,0" HeightRequest="45" BorderColor="Transparent">
+                            <Entry x:Name="txtId" IsReadOnly="True" TextColor="Gray"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Cliente -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Cliente" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="#F3F4F6" CornerRadius="10" Padding="10,0" HeightRequest="45" BorderColor="Transparent">
+                            <Entry x:Name="txtCliente" TextColor="Black"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Producto -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Producto" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="#F3F4F6" CornerRadius="10" Padding="10,0" HeightRequest="45" BorderColor="Transparent">
+                            <Entry x:Name="txtProducto" TextColor="Black"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Fecha Entrega -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Fecha de entrega" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="#F3F4F6" CornerRadius="10" Padding="10,0" HeightRequest="45" BorderColor="Transparent">
+                            <Entry x:Name="txtFecha" TextColor="Black"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Observaciones (Editor para texto largo) -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Observaciones" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="#F3F4F6" CornerRadius="10" Padding="10" HeightRequest="100" BorderColor="Transparent">
+                            <Editor x:Name="txtObservaciones" Placeholder="Escribe notas aquí..." TextColor="Black" AutoSize="TextChanges"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Botones -->
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0,20,0,0">
+                        <Button Grid.Column="0" Text="Volver" BackgroundColor="Gray" TextColor="White" CornerRadius="20" Clicked="BtnVolver_Clicked"/>
+                        <Button Grid.Column="1" Text="Guardar cambios" BackgroundColor="#1F2937" TextColor="White" CornerRadius="20" Clicked="BtnGuardar_Clicked"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.SalesRegisterPage"
+             Title="Registro de Ventas"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- 1. ENCABEZADO SUPERIOR -->
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="120" Padding="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Logo Placeholder -->
+            <Frame HorizontalOptions="Start" 
+CornerRadius="85"       
+HeightRequest="150"      
+WidthRequest="150"       
+Padding="0" 
+IsClippedToBounds="True" 
+BorderColor="Transparent"
+BackgroundColor="Transparent" 
+HasShadow="False">
+
+                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
+                <Image Source="logo_gestor_base_de_dato.png" 
+    Aspect="AspectFit"
+    HorizontalOptions="Center"
+    VerticalOptions="Center"/>
+            </Frame>
+
+            <!-- Botones Derecha (Registrar y Editar) -->
+            <HorizontalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="10">
+
+                <Button Text="Registrar Nueva Venta" 
+                        BackgroundColor="#1F2937" 
+                        TextColor="White" 
+                        CornerRadius="5" 
+                        FontSize="12"
+                        Clicked="BtnRegistrarVenta_Clicked"/>
+
+                <Button Text="Editar Solicitud" 
+                        BackgroundColor="#374151" 
+                        TextColor="White" 
+                        CornerRadius="5" 
+                        FontSize="12"
+                        Clicked="BtnEditarSolicitud_Clicked"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- 2. BARRA DE BÚSQUEDA Y TÍTULO -->
+        <VerticalStackLayout Grid.Row="1" Padding="20, 20, 20, 10" Spacing="15">
+
+            <!-- Buscador -->
+            <Frame CornerRadius="25" Padding="10,0" HeightRequest="50" BorderColor="#1F2937" HasShadow="False" BackgroundColor="White">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Entry x:Name="txtSearch"
+                           Placeholder="Buscar por ID, Empleado o Producto" 
+                           PlaceholderColor="Gray" 
+                           TextColor="Black" 
+                           VerticalOptions="Center"
+                           TextChanged="OnSearchBarTextChanged"/>
+                    <Label Grid.Column="1" Text="🔍" FontSize="20" VerticalOptions="Center" TextColor="#1F2937" Margin="0,0,10,0"/>
+                </Grid>
+            </Frame>
+
+            <Label Text="Seleccionar venta para ver información y actualizar" FontSize="20" HorizontalOptions="Center" TextColor="Black"/>
+        </VerticalStackLayout>
+
+        <!-- 3. ENCABEZADO DE LA TABLA -->
+        <!-- Redefinimos las columnas para dar más espacio a Empleado/Cliente -->
+        <Grid Grid.Row="2" ColumnDefinitions="40, 3*, 1.5*, 2*, 2*, 1.5*, 2*, 2.5*, 1.5*" BackgroundColor="#C4D6E2" Padding="10">
+            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="1" Text="Empleado (Cliente)" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="2" Text="Teléfono" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="3" Text="Fecha de solicitud" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="4" Text="Fecha de entrega" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="5" Text="Duración" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="6" Text="Producto" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="7" Text="Cantidad/Obs." FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="8" Text="Costo" FontAttributes="Bold" TextColor="#1F2937"/>
+        </Grid>
+
+        <!-- 4. LISTA DE DATOS (TABLA) -->
+        <CollectionView Grid.Row="3" x:Name="cvVentas" SelectionMode="Single" SelectionChanged="OnVentaSelectionChanged">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="40, 3*, 1.5*, 2*, 2*, 1.5*, 2*, 2.5*, 1.5*" Padding="10" RowDefinitions="Auto, Auto">
+
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="9" HeightRequest="1" Color="LightGray" Margin="0,5"/>
+
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center" TextColor="Black"/>
+
+                        <!-- Columna combinada: Empleado y Cliente -->
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="{Binding NombreEmpleado}" FontAttributes="Bold" TextColor="#1F2937" LineBreakMode="TailTruncation"/>
+                            <Label Text="{Binding Cliente, StringFormat='Cliente: {0}'}" FontSize="11" TextColor="Gray"/>
+                        </VerticalStackLayout>
+
+                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Telefono}" VerticalOptions="Center" TextColor="Black"/>
+
+                        <!-- Fechas y resto de columnas sin cambios -->
+                        <Frame Grid.Row="0" Grid.Column="3" BackgroundColor="#E5E7EB" Padding="5,2" CornerRadius="10" HorizontalOptions="Start" BorderColor="Transparent">
+                            <Label Text="{Binding FechaSolicitud}" FontSize="12" TextColor="Black"/>
+                        </Frame>
+
+                        <Frame Grid.Row="0" Grid.Column="4" BackgroundColor="#E5E7EB" Padding="5,2" CornerRadius="10" HorizontalOptions="Start" BorderColor="Transparent">
+                            <Label Text="{Binding FechaEntrega}" FontSize="12" TextColor="Black"/>
+                        </Frame>
+
+                        <Label Grid.Row="0" Grid.Column="5" Text="{Binding Duracion}" VerticalOptions="Center" TextColor="Black"/>
+                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding Producto}" VerticalOptions="Center" TextColor="Black"/>
+
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="7" Spacing="2">
+                            <Label Text="{Binding Cantidad, StringFormat='Cantidad: {0}'}" FontSize="12" TextColor="Gray"/>
+                            <Label Text="{Binding Observaciones, StringFormat='Obs: {0}'}" FontSize="12" TextColor="Gray" LineBreakMode="TailTruncation"/>
+                        </VerticalStackLayout>
+
+                        <Label Grid.Row="0" Grid.Column="8" Text="{Binding CostoFormateado}" VerticalOptions="Center" FontAttributes="Bold" TextColor="Green"/>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

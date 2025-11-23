@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Gestor_De_Ventas_Para_Piezas_3D.Modelos"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.OrderStatusPage"
+             Title="Estado de Pedido"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- 1. ENCABEZADO -->
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="120" Padding="20,10">
+            <Frame CornerRadius="20" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="30,10" HasShadow="True">
+                <Label Text="Agenda de Producción" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
+            </Frame>
+
+            <Frame HorizontalOptions="Start" 
+       CornerRadius="85"       
+       HeightRequest="150"      
+       WidthRequest="150"       
+       Padding="0" 
+       IsClippedToBounds="True" 
+       BorderColor="Transparent"
+       BackgroundColor="Transparent" 
+       HasShadow="False">
+
+                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
+                <Image Source="logo_gestor_base_de_dato.png" 
+           Aspect="AspectFit"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"/>
+            </Frame>
+
+        </Grid>
+
+        <!-- 2. TÍTULO SECCIÓN -->
+        <Label Grid.Row="1" Text="Estado De Pedido" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black" Margin="0,15,0,5"/>
+
+        <!-- 3. ENCABEZADO TABLA -->
+        <Grid Grid.Row="2" ColumnDefinitions="60, *, *, *, *" HeightRequest="50">
+            <Label Grid.Column="0" Text="ID&#10;Pedido" HorizontalTextAlignment="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="12" TextColor="Black"/>
+
+            <Frame Grid.Column="1" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
+                <Label Text="Venta" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+            </Frame>
+            <Frame Grid.Column="2" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
+                <Label Text="Producción" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+            </Frame>
+            <Frame Grid.Column="3" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
+                <Label Text="Completado" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+            </Frame>
+            <Frame Grid.Column="4" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
+                <Label Text="Entregado" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+            </Frame>
+        </Grid>
+
+        <!-- 4. LISTA DE PEDIDOS -->
+        <CollectionView Grid.Row="3" x:Name="cvProduccion">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Pedido">
+                    <Grid ColumnDefinitions="60, *, *, *, *" HeightRequest="50">
+
+                        <!-- Columna ID (Clickeable para ver detalles) -->
+                        <Frame Grid.Column="0" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
+                            <Label Text="{Binding Id, StringFormat='{0:D2}'}" 
+                                   HorizontalOptions="Center" VerticalOptions="Center" 
+                                   TextColor="Black" FontAttributes="Bold"
+                                   TextDecorations="Underline">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnIdTapped" CommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Frame>
+
+                        <!-- Columna Venta (Roja) -->
+                        <Frame Grid.Column="1" BackgroundColor="#FFB6C1" BorderColor="Gray" CornerRadius="0" Padding="0">
+                            <Label Text="{Binding IsVenta}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+
+                        <!-- Columna Producción (Naranja) -->
+                        <Frame Grid.Column="2" BackgroundColor="#FFE4B5" BorderColor="Gray" CornerRadius="0" Padding="0">
+                            <Label Text="{Binding IsProduccion}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+
+                        <!-- Columna Completado (Verde) -->
+                        <Frame Grid.Column="3" BackgroundColor="#98FB98" BorderColor="Gray" CornerRadius="0" Padding="0">
+                            <Label Text="{Binding IsCompletado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+
+                        <!-- Columna Entregado (Morado) -->
+                        <Frame Grid.Column="4" BackgroundColor="#E0B0FF" BorderColor="Gray" CornerRadius="0" Padding="0">
+                            <Label Text="{Binding IsEntregado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                        </Frame>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

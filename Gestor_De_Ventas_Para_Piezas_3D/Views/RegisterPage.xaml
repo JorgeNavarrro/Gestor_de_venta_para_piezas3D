@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.RegisterPage"
+             BackgroundColor="#D0E0EF"
+             Title="Nuevo Registro">
+
+    <ScrollView Orientation="Both">
+        <VerticalStackLayout Padding="20" Spacing="10" VerticalOptions="Center">
+
+            <!-- Título Superior -->
+            <Label  
+                   FontSize="28" FontAttributes="Bold" TextColor="Black" 
+                   HorizontalOptions="Start" Margin="10,0,0,10"/>
+
+            <!-- 1. LOGO DE LA EMPRESA (Más Grande) -->
+            <Frame HorizontalOptions="Center" 
+                   CornerRadius="85"       
+                   HeightRequest="180"      
+                   WidthRequest="180"       
+                   Padding="0" 
+                   IsClippedToBounds="True" 
+                   BorderColor="Transparent"
+                   BackgroundColor="Transparent" 
+                   HasShadow="False">
+
+                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
+                <Image Source="logo_gestor_base_de_dato.png" 
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+            </Frame>
+
+            <!-- TARJETA BLANCA PRINCIPAL -->
+            <Frame BackgroundColor="White" CornerRadius="25" Padding="30" HasShadow="True" BorderColor="Transparent">
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="30" RowDefinitions="Auto, Auto">
+
+                    <!-- Títulos de Columnas (MÁS GRANDES) -->
+                    <Label Grid.Column="0" Text="Datos personales" FontSize="22" FontAttributes="Bold" TextColor="#1F2937" HorizontalOptions="Center" Margin="0,0,0,20"/>
+                    <Label Grid.Column="1" Text="Datos de usuario" FontSize="22" FontAttributes="Bold" TextColor="#1F2937" HorizontalOptions="Center" Margin="0,0,0,20"/>
+
+                    <!-- === COLUMNA IZQUIERDA: DATOS PERSONALES === -->
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="20">
+
+                        <!-- Nombres -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="👤" FontSize="36" VerticalOptions="Center" TextColor="#4A148C"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Nombres" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <!-- Input más alto (HeightRequest=55) y letra más grande -->
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtNombres" Placeholder="Ej. Jose Luis" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Apellidos -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="👤" FontSize="36" VerticalOptions="Center" TextColor="#4A148C"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Apellidos" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtApellidos" Placeholder="Ej. Ortiz Pineda" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Fecha Nacimiento -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="📅" FontSize="36" VerticalOptions="Center" TextColor="#3B82F6"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Fecha de Nacimiento" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <DatePicker x:Name="dpNacimiento" TextColor="Black" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Teléfono -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="📞" FontSize="36" VerticalOptions="Center" TextColor="Green"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Número de teléfono" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtTelefono" Placeholder="Ej. 9946667755" Keyboard="Telephone" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Botón Limpiar (Más grande) -->
+                        <Button Text="Limpiar" 
+                                BackgroundColor="#6B7280" 
+                                TextColor="White" 
+                                CornerRadius="25" 
+                                HeightRequest="50"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                Margin="0,15,0,0" 
+                                Clicked="BtnLimpiar_Clicked"/>
+                    </VerticalStackLayout>
+
+
+                    <!-- === COLUMNA DERECHA: DATOS CUENTA === -->
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="20">
+
+                        <!-- Rol -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="👤" FontSize="36" VerticalOptions="Center" TextColor="#4A148C"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Rol de Empleado" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtRol" Placeholder="Ej. Vendedor" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Usuario -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="👤" FontSize="36" VerticalOptions="Center" TextColor="#4A148C"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Usuario" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtNewUsuario" Placeholder="Ej. usuario1" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Contraseña -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="🔒" FontSize="36" VerticalOptions="Center" TextColor="#F59E0B"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Contraseña" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtNewPass" IsPassword="True" Placeholder="Ej. 1234567" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Repetir Contraseña -->
+                        <Grid ColumnDefinitions="50, *" ColumnSpacing="10">
+                            <Label Text="🔒" FontSize="36" VerticalOptions="Center" TextColor="#F59E0B"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Repita Contraseña" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                <Frame BackgroundColor="#F3E8E2" CornerRadius="15" Padding="15,0" HeightRequest="55" BorderColor="Transparent" HasShadow="False">
+                                    <Entry x:Name="txtRepeatPass" IsPassword="True" Placeholder="Ej. 1234567" TextColor="Black" PlaceholderColor="Gray" FontSize="16" VerticalOptions="Center"/>
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Botones Acción (Más grandes) -->
+                        <HorizontalStackLayout Spacing="20" HorizontalOptions="Center" Margin="0,25,0,0">
+                            <Button Text="Cancelar" 
+                                    BackgroundColor="#9CA3AF" 
+                                    TextColor="White" 
+                                    CornerRadius="25" 
+                                    HeightRequest="50"
+                                    WidthRequest="140" 
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    Clicked="BtnCancelar_Clicked"/>
+
+                            <Button Text="Registrar" 
+                                    BackgroundColor="#1F2937" 
+                                    TextColor="White" 
+                                    CornerRadius="25" 
+                                    HeightRequest="50"
+                                    WidthRequest="140" 
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    Clicked="BtnRegistrar_Clicked"/>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

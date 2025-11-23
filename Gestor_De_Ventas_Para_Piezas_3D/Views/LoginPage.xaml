@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.LoginPage"
+             BackgroundColor="#D0E0EF"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto, *" Padding="10" RowSpacing="15" VerticalOptions="CenterAndExpand">
+
+            <!-- 1. LOGO DE LA EMPRESA (EXPANDIDO) -->
+            <Frame Grid.Row="0"
+                   HorizontalOptions="Center" 
+                   CornerRadius="125"  
+                   HeightRequest="180" 
+                   WidthRequest="180" 
+                   BackgroundColor="White" 
+                   Padding="0" 
+                   HasShadow="False" 
+                   BorderColor="Transparent"
+                   IsClippedToBounds="True"
+                   Margin="0,20,0,10">
+
+                <!-- 
+                     CAMBIOS REALIZADOS:
+                     1. HeightRequest/WidthRequest aumentados a 250.
+                     2. CornerRadius aumentado a 125 (la mitad de 250) para mantener el círculo.
+                     3. Source cambiado a "logo_gestor_ventas.png".
+                -->
+                
+                <Image Source="logo_gestor_base_de_dato.png" 
+                       Aspect="AspectFit" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center"
+                       Margin="25"/>
+            </Frame>
+
+            <!-- 2. TARJETA DEL FORMULARIO -->
+            <Frame Grid.Row="1"
+                   BackgroundColor="White" 
+                   CornerRadius="20" 
+                   Padding="30" 
+                   HasShadow="True" 
+                   BorderColor="Transparent"
+                   Margin="0,0,0,40">
+
+                <VerticalStackLayout Spacing="25">
+
+                    <!-- Campo Usuario -->
+                    <VerticalStackLayout Spacing="8">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="👤" FontSize="24" TextColor="#1F2937" VerticalOptions="Center"/>
+                            <Label Text="Usuario" FontSize="20" FontAttributes="Bold" TextColor="#1F2937" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Frame BackgroundColor="#F3E8E2" CornerRadius="25" Padding="15,0" HeightRequest="50" BorderColor="Transparent" HasShadow="False">
+                            <Entry x:Name="txtUsuario" 
+                                   Placeholder="Ej. usuario1" 
+                                   PlaceholderColor="Gray" 
+                                   TextColor="Black" 
+                                   VerticalOptions="Center"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Campo Contraseña -->
+                    <VerticalStackLayout Spacing="8">
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="🔒" FontSize="24" TextColor="#1F2937" VerticalOptions="Center"/>
+                            <Label Text="Contraseña" FontSize="20" FontAttributes="Bold" TextColor="#1F2937" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Frame BackgroundColor="#F3E8E2" CornerRadius="25" Padding="15,0" HeightRequest="50" BorderColor="Transparent" HasShadow="False">
+                            <Entry x:Name="txtPassword" 
+                                   IsPassword="True" 
+                                   Placeholder="Ej. 1234567" 
+                                   PlaceholderColor="Gray" 
+                                   TextColor="Black" 
+                                   VerticalOptions="Center"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Link Olvidé contraseña -->
+                    <Label Text="Olvidé mi contraseña" 
+                           TextColor="#1F2937" 
+                           TextDecorations="Underline" 
+                           HorizontalOptions="Center" 
+                           FontSize="14"
+                           Margin="0,5,0,10">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOlvidePasswordTapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Botones -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <Button Text="Nuevo usuario"
+                                BackgroundColor="#2C3E50"
+                                TextColor="White"
+                                CornerRadius="25"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                HeightRequest="45"
+                                WidthRequest="180"
+                                Clicked="BtnNuevoUsuario_Clicked"/>
+
+                        <Button Text="Ingresar"
+                                BackgroundColor="#2C3E50"
+                                TextColor="White"
+                                CornerRadius="25"
+                                FontAttributes="Bold"
+                                FontSize="14"
+                                HeightRequest="45"
+                                WidthRequest="140"
+                                Clicked="BtnIngresar_Clicked"/>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

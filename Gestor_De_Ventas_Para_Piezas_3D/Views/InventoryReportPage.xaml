@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Gestor_De_Ventas_Para_Piezas_3D.Modelos"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.InventoryReportPage"
+             Title="Reporte de Inventario"
+             BackgroundColor="White"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto">
+
+        <!-- 1. Encabezado del Reporte -->
+        <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="5" BackgroundColor="#5F8090">
+            <Label Text="Reporte de Inventario" 
+                   FontSize="28" FontAttributes="Bold" TextColor="White" 
+                   HorizontalOptions="Center"/>
+            <Label x:Name="lblFechaReporte"
+                   Text="Generado el: 18/11/2025 16:30:00" 
+                   FontSize="14" TextColor="LightGray" 
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- 2. ENCABEZADO DE LA TABLA -->
+        <Grid Grid.Row="1" 
+              ColumnDefinitions="30, 2*, 2*, 3*, 1.5*, 1.5*, 1.5*, 2*" 
+              BackgroundColor="#C4D6E2" 
+              Padding="10">
+            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="1" Text="Artículo" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="2" Text="Categoría" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="3" Text="Detalles" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="4" Text="Stock" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="5" Text="Unidad" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="6" Text="Estado" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="7" Text="Precio/Costo" FontAttributes="Bold" TextColor="#1F2937"/>
+        </Grid>
+
+        <!-- 3. LISTA DE DATOS (TABLA) -->
+        <ScrollView Grid.Row="2">
+            <CollectionView x:Name="cvReporteInventario" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:InventarioItem">
+                        <Grid ColumnDefinitions="30, 2*, 2*, 3*, 1.5*, 1.5*, 1.5*, 2*" Padding="10" RowDefinitions="Auto, Auto">
+                            <BoxView Grid.Row="1" Grid.ColumnSpan="8" HeightRequest="1" Color="LightGray" Margin="0,5"/>
+
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center" TextColor="Black"/>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding NombreArticulo}" VerticalOptions="Center" TextColor="Black"/>
+                            <Label Grid.Row="0" Grid.Column="2" Text="{Binding Categoria}" VerticalOptions="Center" TextColor="Black"/>
+                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding Detalles}" VerticalOptions="Center" TextColor="Black" LineBreakMode="WordWrap"/>
+
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="4" Spacing="5" VerticalOptions="Center">
+                                <Label Text="{Binding StockActual}" FontAttributes="Bold" TextColor="{Binding ColorEstado}"/>
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="5" Text="{Binding Unidad}" VerticalOptions="Center" TextColor="Black"/>
+
+                            <Label Grid.Row="0" Grid.Column="6" Text="{Binding Estado}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold"/>
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="7" VerticalOptions="Center" HorizontalOptions="End">
+                                <Label Text="{Binding PrecioCostoFormateado}" FontAttributes="Bold" TextColor="{Binding ColorEstado}"/>
+                                <Label Text="{Binding TipoPrecio, StringFormat='({0})'}" FontSize="11" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+        <!-- 4. Botón Cerrar -->
+        <Button Grid.Row="3" 
+                Text="Cerrar Reporte" 
+                BackgroundColor="Gray" 
+                TextColor="White" 
+                CornerRadius="10" 
+                WidthRequest="200"
+                Margin="0,15,0,15"
+                HorizontalOptions="Center"
+                Clicked="BtnCerrar_Clicked"/>
+    </Grid>
+</ContentPage>

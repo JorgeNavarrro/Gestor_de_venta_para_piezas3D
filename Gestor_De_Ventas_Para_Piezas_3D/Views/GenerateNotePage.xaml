@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.GenerateNotePage"
+             Title="Generar Nota"
+             BackgroundColor="#5F8090">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" VerticalOptions="Center">
+
+            <!-- Título -->
+            <Frame BackgroundColor="#2C3E50" CornerRadius="25" Padding="0" HeightRequest="60" WidthRequest="250" HorizontalOptions="Center" HasShadow="False" Margin="0,0,0,30" BorderColor="Transparent">
+                <Label Text="Nota de venta" FontSize="22" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
+
+            <!-- Formulario -->
+            <Frame BackgroundColor="White" CornerRadius="20" Padding="25" HasShadow="True">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="160, *" RowSpacing="15">
+                    <!-- Campos -->
+                    <Label Grid.Row="0" Grid.Column="0" Text="No. Nota de venta" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Label Grid.Row="0" Grid.Column="1" x:Name="lblNoNota" Text="00000X" TextColor="Gray" VerticalOptions="Center"/>
+                    <BoxView Grid.Row="0" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="Fecha de emisión:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="lblFecha" Text="--/--/----" TextColor="Gray" VerticalOptions="Center"/>
+                    <BoxView Grid.Row="1" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Text="Nombre del Cliente:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Entry Grid.Row="2" Grid.Column="1" x:Name="txtCliente" Placeholder="Ingrese nombre" TextColor="Black" BackgroundColor="Transparent"/>
+                    <BoxView Grid.Row="2" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Text="Teléfono del cliente:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Entry Grid.Row="3" Grid.Column="1" x:Name="txtTelefono" Placeholder="Ingrese teléfono" Keyboard="Telephone" TextColor="Black" BackgroundColor="Transparent"/>
+                    <BoxView Grid.Row="3" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Text="Monto total:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Entry Grid.Row="4" Grid.Column="1" x:Name="txtMonto" Placeholder="$0.00" Keyboard="Numeric" TextColor="Black" BackgroundColor="Transparent"/>
+                    <BoxView Grid.Row="4" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Text="Método de Pago:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Picker Grid.Row="5" Grid.Column="1" x:Name="pkrMetodo" Title="Seleccione..." TextColor="Black" TitleColor="Gray">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Efectivo</x:String>
+                                <x:String>Tarjeta</x:String>
+                                <x:String>Transferencia</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    <BoxView Grid.Row="5" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Text="Observaciones:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
+                    <Entry Grid.Row="6" Grid.Column="1" x:Name="txtObservaciones" Placeholder="..." TextColor="Black" BackgroundColor="Transparent"/>
+                    <BoxView Grid.Row="6" Grid.Column="1" HeightRequest="1" Color="Black" VerticalOptions="End"/>
+                </Grid>
+            </Frame>
+
+            <Button Text="Generar" BackgroundColor="#2C3E50" TextColor="White" CornerRadius="20" FontAttributes="Bold" FontSize="18" WidthRequest="200" Margin="0,30,0,0" Clicked="BtnGenerar_Clicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.OrderAgendaPage"
+             Title="Agenda de Pedidos"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- 1. ENCABEZADO SUPERIOR -->
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="100" Padding="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Logo -->
+                <ColumnDefinition Width="*"/>
+                <!-- Título Central -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Texto Derecha -->
+            </Grid.ColumnDefinitions>
+
+            <Frame HorizontalOptions="Start" 
+       CornerRadius="85"       
+       HeightRequest="150"      
+       WidthRequest="150"       
+       Padding="0" 
+       IsClippedToBounds="True" 
+       BorderColor="Transparent"
+       BackgroundColor="Transparent" 
+       HasShadow="False">
+
+                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
+                <Image Source="logo_gestor_base_de_dato.png" 
+           Aspect="AspectFit"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"/>
+            </Frame>
+
+
+            <!-- Título Central -->
+            <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="20,10" CornerRadius="0">
+                <Label Text="Agenda de pedidos" FontSize="22" TextColor="Black" FontAttributes="Bold"/>
+            </Frame>
+
+            <!-- Texto Derecha -->
+            <Label Grid.Column="2" Text="                            ." TextColor="#5F8090" VerticalOptions="Start" HorizontalOptions="End" FontSize="12"/>
+        </Grid>
+
+        <!-- 2. BARRA DE BÚSQUEDA Y TÍTULO -->
+        <VerticalStackLayout Grid.Row="1" Padding="20, 20, 20, 10" Spacing="15">
+
+            <!-- Buscador CORREGIDO: BackgroundColor="White" para evitar la barra negra -->
+            <Frame CornerRadius="25" Padding="10,0" HeightRequest="50" BorderColor="#1F2937" HasShadow="False" BackgroundColor="White">
+                <Grid ColumnDefinitions="*, Auto">
+                    <!-- Agregamos TextChanged para que filtre mientras escribes -->
+                    <Entry x:Name="txtSearch"
+                           Placeholder="Buscar por Cliente o Producto" 
+                           PlaceholderColor="Gray" 
+                           TextColor="Black" 
+                           VerticalOptions="Center"
+                           TextChanged="OnSearchBarTextChanged"/>
+                    <Label Grid.Column="1" Text="🔍" FontSize="20" VerticalOptions="Center" TextColor="#1F2937" Margin="0,0,10,0"/>
+                </Grid>
+            </Frame>
+
+            <Label Text="Selecciona un pedido para editarlo" FontSize="20" HorizontalOptions="Center" TextColor="Black"/>
+        </VerticalStackLayout>
+
+        <!-- 3. ENCABEZADO DE LA TABLA -->
+        <Grid Grid.Row="2" ColumnDefinitions="30, 2*, 2*, 2.5*, 2.5*, 2.5*, 1.5*" BackgroundColor="#C4D6E2" Padding="10">
+            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="1" Text="Cliente" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="2" Text="Producto" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="3" Text="Fecha de entrega" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="4" Text="Estado" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="5" Text="Fecha de inicio" FontAttributes="Bold" TextColor="#1F2937"/>
+            <Label Grid.Column="6" Text="Duración" FontAttributes="Bold" TextColor="#1F2937"/>
+        </Grid>
+
+        <!-- 4. LISTA DE DATOS (TABLA) -->
+        <CollectionView Grid.Row="3" x:Name="cvPedidos" SelectionMode="Single" SelectionChanged="OnPedidoSelectionChanged">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="30, 2*, 2*, 2.5*, 2.5*, 2.5*, 1.5*" Padding="10" RowDefinitions="Auto, Auto">
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="7" HeightRequest="1" Color="LightGray" Margin="0,5"/>
+
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center" TextColor="Black"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Cliente}" VerticalOptions="Center" TextColor="Black"/>
+                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Producto}" VerticalOptions="Center" TextColor="Black"/>
+
+                        <Frame Grid.Row="0" Grid.Column="3" BackgroundColor="#E5E7EB" Padding="5,2" CornerRadius="10" HorizontalOptions="Start" BorderColor="Transparent">
+                            <Label Text="{Binding FechaEntrega}" FontSize="12" TextColor="Black"/>
+                        </Frame>
+
+                        <Label Grid.Row="0" Grid.Column="4" Text="{Binding Estado}" VerticalOptions="Center" TextColor="Black"/>
+
+                        <Frame Grid.Row="0" Grid.Column="5" BackgroundColor="#E5E7EB" Padding="5,2" CornerRadius="10" HorizontalOptions="Start" BorderColor="Transparent">
+                            <Label Text="{Binding FechaInicio}" FontSize="12" TextColor="Black"/>
+                        </Frame>
+
+                        <HorizontalStackLayout Grid.Row="0" Grid.Column="6" Spacing="5">
+                            <Label Text="📅" FontSize="12" VerticalOptions="Center" TextColor="Gray"/>
+                            <Label Text="{Binding Duracion}" VerticalOptions="Center" TextColor="Black"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

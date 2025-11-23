@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.SalesNotePage"
+             Title="Nota de Venta"
+             BackgroundColor="#F0F2F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20" VerticalOptions="Center">
+
+            <!-- Título -->
+            <Label Text="Nota de Venta" 
+                   FontSize="28" FontAttributes="Bold" TextColor="#1F2937" 
+                   HorizontalOptions="Center" Margin="0,0,0,10"/>
+
+            <!-- Tarjeta tipo Recibo -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="20" HasShadow="True" BorderColor="Transparent">
+                <VerticalStackLayout Spacing="15">
+
+                    <!-- No. Nota -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="No. Nota de venta" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblNoNota" Text="------" TextColor="Black" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Fecha -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="Fecha de emisión:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblFecha" Text="--/--/----" TextColor="Black" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Cliente -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="Nombre del Cliente:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblCliente" Text="------" TextColor="Black" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Teléfono -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="Teléfono del cliente:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblTelefono" Text="------" TextColor="Black" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Monto -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="Monto total:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblMonto" Text="$0.00" TextColor="Green" FontAttributes="Bold" FontSize="16" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Método -->
+                    <Grid ColumnDefinitions="140, *">
+                        <Label Grid.Column="0" Text="Método de Pago:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label Grid.Column="1" x:Name="lblMetodo" Text="------" TextColor="Black" HorizontalOptions="End"/>
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="LightGray"/>
+
+                    <!-- Observaciones -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Observaciones:" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Label x:Name="lblObservaciones" Text="Sin observaciones" TextColor="Gray" FontSize="12"/>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botón Generar -->
+            <Button Text="Generar" 
+                    BackgroundColor="#374151" 
+                    TextColor="White" 
+                    CornerRadius="20" 
+                    HeightRequest="50"
+                    WidthRequest="200"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    HorizontalOptions="Center"
+                    Margin="0,20,0,0"
+                    Clicked="BtnGenerar_Clicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

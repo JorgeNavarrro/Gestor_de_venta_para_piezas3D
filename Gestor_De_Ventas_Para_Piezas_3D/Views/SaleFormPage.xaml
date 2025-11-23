@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.SaleFormPage"
+             Title="Registro de Nueva Venta"
+             BackgroundColor="#F0F2F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label x:Name="lblTitulo" 
+                   Text="Registrar Nueva Venta" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   TextColor="#1F2937" 
+                   HorizontalOptions="Center" 
+                   Margin="0,10,0,20"/>
+
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="20" HasShadow="True">
+                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, 120" ColumnSpacing="20" RowSpacing="15">
+
+                    <!-- Columna 1 -->
+
+                    <Label Grid.Row="0" Grid.Column="0" Text="ID (Automático)" FontAttributes="Bold" TextColor="Gray"/>
+                    <Entry Grid.Row="1" Grid.Column="0" x:Name="txtId" IsReadOnly="True" TextColor="Gray" BackgroundColor="#E5E7EB"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Text="Nombre del Empleado" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <!-- Color de texto explícito para que siempre se vea -->
+                    <Entry Grid.Row="3" Grid.Column="0" x:Name="txtEmpleado" Placeholder="Ej. Ana Martinez" TextColor="Black"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Text="Cliente (Nombre)" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <Entry Grid.Row="5" Grid.Column="0" x:Name="txtCliente" Placeholder="Ej. Juan Pérez" TextColor="Black"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Text="Teléfono" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <Entry Grid.Row="7" Grid.Column="0" x:Name="txtTelefono" Placeholder="Ej. 9981234567" Keyboard="Telephone" TextColor="Black"/>
+
+                    <!-- Columna 2 -->
+
+                    <Label Grid.Row="0" Grid.Column="1" Text="Producto" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <Entry Grid.Row="1" Grid.Column="1" x:Name="txtProducto" Placeholder="Ej. Maceta" TextColor="Black"/>
+
+                    <Label Grid.Row="2" Grid.Column="1" Text="Cantidad" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <Entry Grid.Row="3" Grid.Column="1" x:Name="txtCantidad" Placeholder="Ej. 21" Keyboard="Numeric" TextColor="Black"/>
+
+                    <Label Grid.Row="4" Grid.Column="1" Text="Costo (MXN)" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <Entry Grid.Row="5" Grid.Column="1" x:Name="txtCosto" Placeholder="Ej. 5000.00" Keyboard="Numeric" TextColor="Black"/>
+
+                    <Label Grid.Row="6" Grid.Column="1" Text="Fecha de Entrega" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <DatePicker Grid.Row="7" Grid.Column="1" x:Name="dpEntrega"/>
+
+                    <!-- Observaciones: Aumentamos la altura de la fila y usamos HeightRequest en el Editor -->
+                    <Label Grid.Row="8" Grid.ColumnSpan="2" Text="Observaciones" FontAttributes="Bold" TextColor="#1F2937" Margin="0,10,0,0"/>
+                    <Editor Grid.Row="9" Grid.ColumnSpan="2" x:Name="txtObservaciones" HeightRequest="100" Placeholder="Escribe notas aquí..." TextColor="Black"/>
+
+                </Grid>
+            </Frame>
+
+            <!-- Botones de Acción: Aumentamos el WidthRequest del botón de acción -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,10,0,20">
+                <Button Text="Cancelar" 
+                        BackgroundColor="Gray" 
+                        TextColor="White" 
+                        CornerRadius="20" 
+                        WidthRequest="120"
+                        Clicked="BtnCancelar_Clicked"/>
+                <Button x:Name="btnAccion"
+                        Text="GUARDAR VENTA" 
+                        BackgroundColor="#1F2937" 
+                        TextColor="White" 
+                        CornerRadius="20" 
+                        WidthRequest="220" />
+                <!-- AUMENTADO para que quepa el texto -->
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

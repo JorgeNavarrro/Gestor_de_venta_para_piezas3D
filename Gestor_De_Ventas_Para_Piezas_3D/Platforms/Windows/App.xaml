@@ -1,0 +1,8 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="Gestor_De_Ventas_Para_Piezas_3D.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:Gestor_De_Ventas_Para_Piezas_3D.WinUI">
+
+</maui:MauiWinUIApplication>

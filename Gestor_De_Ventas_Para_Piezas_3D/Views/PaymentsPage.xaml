@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Gestor_De_Ventas_Para_Piezas_3D.Modelos"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.PaymentsPage"
+             Title="Pagos"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, *">
+
+        <!-- 1. ENCABEZADO SUPERIOR -->
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="100" Padding="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Logo -->
+            <Frame HorizontalOptions="Start" 
+       CornerRadius="85"       
+       HeightRequest="150"      
+       WidthRequest="150"       
+       Padding="0" 
+       IsClippedToBounds="True" 
+       BorderColor="Transparent"
+       BackgroundColor="Transparent" 
+       HasShadow="False">
+
+                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
+                <Image Source="logo_gestor_base_de_dato.png" 
+           Aspect="AspectFit"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"/>
+            </Frame>
+
+
+            <!-- Título -->
+            <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="40,10" CornerRadius="0">
+                <Label Text="Pagos" FontSize="22" TextColor="Black" FontAttributes="Bold"/>
+            </Frame>
+
+            <!-- BOTÓN DE NUEVA NOTA (SUPERIOR DERECHA) -->
+            <Button Grid.Column="2" 
+                    Text="+ Nueva Nota" 
+                    BackgroundColor="#1F2937" 
+                    TextColor="White" 
+                    FontSize="12" 
+                    HeightRequest="40"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    Margin="0,0,10,0"
+                    Clicked="BtnNuevaNota_Clicked"/>
+        </Grid>
+
+        <!-- 2. FILTRO -->
+        <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="10">
+
+            <Label Text="Buscar por forma de pago:" 
+                   TextColor="#1F2937" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Start"/>
+
+            <!-- Marco del Picker -->
+            <Frame BackgroundColor="White" 
+                   BorderColor="#1F2937" 
+                   CornerRadius="10" 
+                   Padding="10,0" 
+                   HeightRequest="45" 
+                   HorizontalOptions="Start" 
+                   WidthRequest="300"
+                   HasShadow="False">
+
+                <Picker x:Name="pkrMetodoPago" 
+                        Title="Seleccione método..." 
+                        TextColor="Black" 
+                        TitleColor="Gray"
+                        VerticalTextAlignment="Center"
+                        SelectedIndexChanged="OnFiltroChanged">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Todos</x:String>
+                            <x:String>Tarjeta</x:String>
+                            <x:String>Efectivo</x:String>
+                            <x:String>Transferencia</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Frame>
+
+            <Label Text="Historial de pagos" 
+                   FontSize="20" 
+                   TextColor="White" 
+                   BackgroundColor="#1F2937" 
+                   Padding="15,8" 
+                   HorizontalOptions="Start" 
+                   Margin="0,15,0,0"
+                   FontAttributes="Bold"/>
+        </VerticalStackLayout>
+
+        <!-- 3. ENCABEZADO DE TABLA -->
+        <Grid Grid.Row="2" ColumnDefinitions="30, 2*, 3*, 3*, 2*, 2*, 2*" BackgroundColor="#C4D6E2" Padding="10">
+            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="1" Text="ID Pedido" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="2" Text="Cliente" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="3" Text="Producto(s)" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="4" Text="Método" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="5" Text="Estado" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="6" Text="Total" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+        </Grid>
+
+        <!-- 4. LISTA DE PAGOS -->
+        <CollectionView Grid.Row="3" x:Name="cvPagos" SelectionMode="Single" SelectionChanged="OnPagoSelectionChanged">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Pago">
+                    <Grid ColumnDefinitions="30, 2*, 3*, 3*, 2*, 2*, 2*" Padding="10" RowDefinitions="Auto, Auto">
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="7" HeightRequest="1" Color="LightGray" Margin="0,5"/>
+
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding IdPedido}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding NombreCliente}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="3" Text="{Binding Productos}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="4" Text="{Binding MedioPago}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="5" Text="{Binding EstadoPago}" TextColor="Black" FontSize="11" VerticalOptions="Center"/>
+                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding CostoTotalFormateado}" TextColor="Green" FontAttributes="Bold" FontSize="11" VerticalOptions="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
