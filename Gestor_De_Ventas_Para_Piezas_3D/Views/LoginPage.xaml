@@ -2,121 +2,157 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.LoginPage"
-             BackgroundColor="#D0E0EF"
+             Title="Login"
+             BackgroundColor="#C9D6DF" 
              NavigationPage.HasNavigationBar="False">
 
-    <ScrollView>
-        <Grid RowDefinitions="Auto, *" Padding="10" RowSpacing="15" VerticalOptions="CenterAndExpand">
+    <!-- Fondo general azul grisáceo (#C9D6DF similar a la imagen) -->
 
-            <!-- 1. LOGO DE LA EMPRESA (EXPANDIDO) -->
-            <Frame Grid.Row="0"
-                   HorizontalOptions="Center" 
-                   CornerRadius="125"  
-                   HeightRequest="180" 
-                   WidthRequest="180" 
-                   BackgroundColor="White" 
+    <Grid>
+        <!-- Texto superior izquierdo -->
+        <Label Text="Inicio de Sesión." 
+               FontSize="18" 
+               FontAttributes="Bold" 
+               TextColor="Black"
+               Margin="20,20,0,0"
+               VerticalOptions="Start"
+               HorizontalOptions="Start"/>
+
+        <!-- Contenido centrado -->
+        <VerticalStackLayout VerticalOptions="Center" Spacing="30">
+
+            <!-- Logo Circular Superior -->
+            <Frame HeightRequest="120" 
+                   WidthRequest="120" 
+                   CornerRadius="60" 
                    Padding="0" 
-                   HasShadow="False" 
-                   BorderColor="Transparent"
                    IsClippedToBounds="True"
-                   Margin="0,20,0,10">
-
-                <!-- 
-                     CAMBIOS REALIZADOS:
-                     1. HeightRequest/WidthRequest aumentados a 250.
-                     2. CornerRadius aumentado a 125 (la mitad de 250) para mantener el círculo.
-                     3. Source cambiado a "logo_gestor_ventas.png".
-                -->
-                
+                   HorizontalOptions="Center"
+                   BorderColor="Transparent"
+                   BackgroundColor="White">
                 <Image Source="logo_gestor_base_de_dato.png" 
                        Aspect="AspectFit" 
-                       HorizontalOptions="Center" 
-                       VerticalOptions="Center"
-                       Margin="25"/>
+                       Margin="15"/>
             </Frame>
 
-            <!-- 2. TARJETA DEL FORMULARIO -->
-            <Frame Grid.Row="1"
-                   BackgroundColor="White" 
+            <!-- Tarjeta Blanca de Login -->
+            <Frame BackgroundColor="White" 
                    CornerRadius="20" 
-                   Padding="30" 
-                   HasShadow="True" 
-                   BorderColor="Transparent"
-                   Margin="0,0,0,40">
+                   Margin="40,0" 
+                   Padding="30"
+                   HasShadow="True"
+                   BorderColor="Transparent">
 
-                <VerticalStackLayout Spacing="25">
+                <VerticalStackLayout Spacing="15">
 
-                    <!-- Campo Usuario -->
-                    <VerticalStackLayout Spacing="8">
-                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="👤" FontSize="24" TextColor="#1F2937" VerticalOptions="Center"/>
-                            <Label Text="Usuario" FontSize="20" FontAttributes="Bold" TextColor="#1F2937" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
+                    <!-- Campo USUARIO con Icono -->
+                    <Grid ColumnDefinitions="50, *" RowDefinitions="Auto, Auto">
+                        <!-- Icono Usuario (Izquierda) -->
+                        <!-- Usamos un Label con un caracter Unicode de usuario o una imagen si tienes icono -->
+                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" 
+                               Text="👤" 
+                               FontSize="40" 
+                               TextColor="#2D4059"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
 
-                        <Frame BackgroundColor="#F3E8E2" CornerRadius="25" Padding="15,0" HeightRequest="50" BorderColor="Transparent" HasShadow="False">
-                            <Entry x:Name="txtUsuario" 
+                        <!-- Título -->
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="Usuario" 
+                               TextColor="Black" 
+                               FontAttributes="Bold" 
+                               FontSize="16" 
+                               HorizontalOptions="Center"/>
+
+                        <!-- Entry -->
+                        <Frame Grid.Row="1" Grid.Column="1" 
+                               BackgroundColor="#F2EBE5" 
+                               CornerRadius="20" 
+                               Padding="15,0" 
+                               HeightRequest="45"
+                               BorderColor="Transparent">
+                            <Entry x:Name="txtUser" 
                                    Placeholder="Ej. usuario1" 
-                                   PlaceholderColor="Gray" 
-                                   TextColor="Black" 
+                                   PlaceholderColor="Gray"
+                                   TextColor="Black"
                                    VerticalOptions="Center"/>
                         </Frame>
-                    </VerticalStackLayout>
+                    </Grid>
 
-                    <!-- Campo Contraseña -->
-                    <VerticalStackLayout Spacing="8">
-                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label Text="🔒" FontSize="24" TextColor="#1F2937" VerticalOptions="Center"/>
-                            <Label Text="Contraseña" FontSize="20" FontAttributes="Bold" TextColor="#1F2937" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
+                    <!-- Campo CONTRASEÑA con Icono -->
+                    <Grid ColumnDefinitions="50, *" RowDefinitions="Auto, Auto" Margin="0,10,0,0">
+                        <!-- Icono Candado -->
+                        <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" 
+                               Text="🔒" 
+                               FontSize="40" 
+                               TextColor="#2D4059"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
 
-                        <Frame BackgroundColor="#F3E8E2" CornerRadius="25" Padding="15,0" HeightRequest="50" BorderColor="Transparent" HasShadow="False">
-                            <Entry x:Name="txtPassword" 
-                                   IsPassword="True" 
+                        <!-- Título -->
+                        <Label Grid.Row="0" Grid.Column="1" 
+                               Text="Contraseña" 
+                               TextColor="Black" 
+                               FontAttributes="Bold" 
+                               FontSize="16" 
+                               HorizontalOptions="Center"/>
+
+                        <!-- Entry -->
+                        <Frame Grid.Row="1" Grid.Column="1" 
+                               BackgroundColor="#F2EBE5" 
+                               CornerRadius="20" 
+                               Padding="15,0" 
+                               HeightRequest="45"
+                               BorderColor="Transparent">
+                            <Entry x:Name="txtPass" 
                                    Placeholder="Ej. 1234567" 
-                                   PlaceholderColor="Gray" 
-                                   TextColor="Black" 
+                                   PlaceholderColor="Gray"
+                                   IsPassword="True"
+                                   TextColor="Black"
                                    VerticalOptions="Center"/>
                         </Frame>
-                    </VerticalStackLayout>
+                    </Grid>
 
-                    <!-- Link Olvidé contraseña -->
+                    <!-- Olvidé mi contraseña -->
                     <Label Text="Olvidé mi contraseña" 
-                           TextColor="#1F2937" 
-                           TextDecorations="Underline" 
-                           HorizontalOptions="Center" 
-                           FontSize="14"
-                           Margin="0,5,0,10">
+                           TextColor="Black" 
+                           FontSize="12" 
+                           TextDecorations="Underline"
+                           HorizontalOptions="Center"
+                           Margin="0,5,0,15">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnOlvidePasswordTapped"/>
+                            <TapGestureRecognizer Tapped="OnOlvidePassClicked"/>
                         </Label.GestureRecognizers>
                     </Label>
 
                     <!-- Botones -->
-                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                        <Button Text="Nuevo usuario"
-                                BackgroundColor="#2C3E50"
-                                TextColor="White"
-                                CornerRadius="25"
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                        <!-- Botón Nuevo Usuario -->
+                        <Button Grid.Column="0"
+                                Text="Nuevo usuario" 
+                                Clicked="OnRegisterClicked" 
+                                BackgroundColor="#34495E" 
+                                TextColor="White" 
                                 FontAttributes="Bold"
-                                FontSize="14"
-                                HeightRequest="45"
-                                WidthRequest="180"
-                                Clicked="BtnNuevoUsuario_Clicked"/>
+                                CornerRadius="20"
+                                HeightRequest="50"
+                                FontSize="14"/>
 
-                        <Button Text="Ingresar"
-                                BackgroundColor="#2C3E50"
-                                TextColor="White"
-                                CornerRadius="25"
+                        <!-- Botón Ingresar -->
+                        <Button Grid.Column="1"
+                                Text="Ingresar" 
+                                Clicked="OnLoginClicked" 
+                                BackgroundColor="#34495E" 
+                                TextColor="White" 
                                 FontAttributes="Bold"
-                                FontSize="14"
-                                HeightRequest="45"
-                                WidthRequest="140"
-                                Clicked="BtnIngresar_Clicked"/>
-                    </HorizontalStackLayout>
+                                CornerRadius="20"
+                                HeightRequest="50"
+                                FontSize="14"/>
+                    </Grid>
 
                 </VerticalStackLayout>
             </Frame>
 
-        </Grid>
-    </ScrollView>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

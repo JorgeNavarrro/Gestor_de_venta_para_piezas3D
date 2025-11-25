@@ -30,7 +30,7 @@
                 BorderColor="Transparent"
                  BackgroundColor="Transparent" 
                  HasShadow="False">
-            
+
                     <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
                     <Image Source="logo_gestor_base_de_dato.png" 
            Aspect="AspectFit"

@@ -1,60 +1,76 @@
 using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System.Collections.ObjectModel;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class OrderStatusPage : ContentPage
 {
-    public ObservableCollection<Pedido> ListaProduccion { get; set; }
+    public ObservableCollection<Venta> ListaProduccion { get; set; }
 
     public OrderStatusPage()
     {
         InitializeComponent();
-        CargarDatos();
-    }
-
-    private void CargarDatos()
-    {
-        // Datos de prueba para la tabla de producción
-        var pedidos = new List<Pedido>
-        {
-            new Pedido { Id = 1, Cliente = "Ana Martinez", Producto = "Maceta", Estado = "Venta", FechaEntrega = "20/10/2025" },
-            new Pedido { Id = 2, Cliente = "Luis Torres", Producto = "Llavero", Estado = "En producción", FechaEntrega = "22/10/2025" },
-            new Pedido { Id = 3, Cliente = "Jorge Navarro", Producto = "Figura", Estado = "Entregado", FechaEntrega = "25/10/2025" },
-            new Pedido { Id = 4, Cliente = "Sofia H.", Producto = "Engrane", Estado = "Completado", FechaEntrega = "27/10/2025" },
-            new Pedido { Id = 5, Cliente = "Carlos R.", Producto = "Soporte", Estado = "Venta", FechaEntrega = "30/10/2025" }
-        };
-
-        ListaProduccion = new ObservableCollection<Pedido>(pedidos);
+        ListaProduccion = new ObservableCollection<Venta>();
         cvProduccion.ItemsSource = ListaProduccion;
     }
 
-    // Evento al tocar el número de ID: Muestra detalles
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await CargarDatosDesdeBD();
+    }
+
+    private async Task CargarDatosDesdeBD()
+    {
+        var db = new DatabaseService();
+        // Usamos ObtenerVentasAsync porque ahí están guardados los pedidos
+        var ventas = await db.ObtenerVentasAsync();
+
+        ListaProduccion.Clear();
+        // Ordenamos por ID ascendente para que salga 01, 02, 03...
+        foreach (var v in ventas.OrderBy(x => x.Id))
+        {
+            // Aseguramos que tenga un estado válido por defecto
+            if (string.IsNullOrEmpty(v.Estado)) v.Estado = "Venta";
+            ListaProduccion.Add(v);
+        }
+    }
+
+    // Evento al tocar el ID: Muestra detalles
     private async void OnIdTapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is Pedido pedido)
+        if (e.Parameter is Venta venta)
         {
-            await DisplayAlert($"Detalles Pedido #{pedido.Id:D2}",
-                $"Cliente: {pedido.Cliente}\n" +
-                $"Producto: {pedido.Producto}\n" +
-                $"Fecha Entrega: {pedido.FechaEntrega}\n" +
-                $"Estado Actual: {pedido.Estado}",
+            await DisplayAlert($"Detalles Pedido #{venta.Id:D2}",
+                $"Cliente: {venta.Cliente}\n" +
+                $"Producto: {venta.Producto}\n" +
+                $"Fecha Entrega: {venta.FechaEntrega}\n" +
+                $"Estado Actual: {venta.Estado}\n\n" +
+                $"Obs: {venta.Observaciones}",
                 "Cerrar");
         }
     }
 
-    // Evento al tocar una celda de estado: Permite cambiar el estado
+    // Evento al tocar una celda de color: Cambia el estado
     private async void OnEstadoTapped(object sender, TappedEventArgs e)
     {
-        if (e.Parameter is Pedido pedido)
+        if (e.Parameter is Venta venta)
         {
-            string nuevoEstado = await DisplayActionSheet($"Mover Pedido {pedido.Id:D2} a:", "Cancelar", null,
+            string nuevoEstado = await DisplayActionSheet($"Mover Pedido {venta.Id:D2} a:", "Cancelar", null,
                 "Venta", "En producción", "Completado", "Entregado");
 
             if (!string.IsNullOrEmpty(nuevoEstado) && nuevoEstado != "Cancelar")
             {
-                pedido.Estado = nuevoEstado;
-                // Gracias a INotifyPropertyChanged en el modelo, la "X" se moverá sola en la pantalla
+                // 1. Actualizamos el objeto localmente
+                venta.Estado = nuevoEstado;
+
+                // 2. Guardamos en la Base de Datos
+                var db = new DatabaseService();
+                await db.GuardarVentaAsync(venta);
+
+                // 3. Refrescamos la lista para que la "X" se mueva
+                await CargarDatosDesdeBD();
             }
         }
     }

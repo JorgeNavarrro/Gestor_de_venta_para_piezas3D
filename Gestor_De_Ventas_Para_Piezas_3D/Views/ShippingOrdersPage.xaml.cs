@@ -1,50 +1,71 @@
 using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class ShippingOrdersPage : ContentPage
 {
-    public ObservableCollection<Pedido> ListaPedidos { get; set; }
+    public ObservableCollection<Venta> ListaEnvios { get; set; }
 
     public ShippingOrdersPage()
     {
         InitializeComponent();
-        CargarDatos();
+        ListaEnvios = new ObservableCollection<Venta>();
+        cvEnvios.ItemsSource = ListaEnvios;
     }
 
-    private void CargarDatos()
+    protected override async void OnAppearing()
     {
-        // Simulamos la lista de todos los pedidos
-        var todosLosPedidos = new List<Pedido>
+        base.OnAppearing();
+        await CargarPedidosCompletados();
+    }
+
+    private async Task CargarPedidosCompletados()
+    {
+        var db = new DatabaseService();
+        var ventas = await db.ObtenerVentasAsync();
+
+        ListaEnvios.Clear();
+
+        // FILTRO: Solo mostramos los que están "Completado"
+        // Puedes agregar "|| v.Estado == 'Entregado'" si también quieres ver los históricos
+        var completados = ventas.Where(v => v.Estado == "Completado").OrderBy(v => v.Id);
+
+        foreach (var venta in completados)
         {
-            // Pedidos de ejemplo del PDF
-            new Pedido { Id = 1, Cliente = "Ana Martinez", Producto = "Maceta", FechaEntrega = "20/10/2025", Estado = "En producción", FechaInicio = "17/10/2025", Duracion = "" },
-            new Pedido { Id = 2, Cliente = "Luis Torres", Producto = "Llavero", FechaEntrega = "22/10/2025", Estado = "Pendiente", FechaInicio = "18/10/2025", Duracion = "" },
-            new Pedido { Id = 3, Cliente = "Jorge Navarro", Producto = "Figura", FechaEntrega = "25/10/2025", Estado = "Completado", FechaInicio = "22/10/2025", Duracion = "3 días" },
-            // Agregamos más para simular pedidos listos
-            new Pedido { Id = 4, Cliente = "Carlos Ruiz", Producto = "Logo", FechaEntrega = "27/10/2025", Estado = "Completado", FechaInicio = "20/10/2025", Duracion = "7 días" },
-            new Pedido { Id = 5, Cliente = "Marta Sol", Producto = "Engrane", FechaEntrega = "30/10/2025", Estado = "En producción", FechaInicio = "25/10/2025", Duracion = "" }
-        };
+            ListaEnvios.Add(venta);
+        }
 
-        // Filtramos para mostrar solo los que están "Completado" o "Pendiente"
-        var pedidosFinalizados = todosLosPedidos
-            .Where(p => p.Estado == "Completado" || p.Estado == "Pendiente")
-            .ToList();
-
-        ListaPedidos = new ObservableCollection<Pedido>(pedidosFinalizados);
-        cvPedidosFinalizados.ItemsSource = ListaPedidos;
+        if (ListaEnvios.Count == 0)
+        {
+            // Opcional: Mostrar mensaje si no hay nada listo para envío
+            // await DisplayAlert("Info", "No hay pedidos completados listos para envío.", "OK");
+        }
     }
 
     private async void BtnImprimir_Clicked(object sender, EventArgs e)
     {
-        // En una aplicación real, aquí se llamaría a un servicio de impresión o PDF
-
-        // Obtenemos el pedido de la fila donde se hizo clic
+        // Obtenemos el objeto Venta del botón presionado
         var button = sender as Button;
-        if (button?.BindingContext is Pedido pedido)
+        if (button?.CommandParameter is Venta venta)
         {
-            await DisplayAlert("Impresión", $"Generando orden de envío para el pedido ID {pedido.Id} de {pedido.Cliente}.", "Aceptar");
+            // Simulación de impresión
+            bool respuesta = await DisplayAlert("Imprimir Orden",
+                $"¿Deseas generar la orden de envío para el pedido #{venta.Id} de {venta.Cliente}?",
+                "Sí, Imprimir", "Cancelar");
+
+            if (respuesta)
+            {
+                await DisplayAlert("Éxito", "Orden de envío generada y enviada a la impresora.", "OK");
+
+                // Opcional: Cambiar estado a "Entregado" o "Enviado" automáticamente
+                // venta.Estado = "Entregado";
+                // var db = new DatabaseService();
+                // await db.GuardarVentaAsync(venta);
+                // await CargarPedidosCompletados(); // Refrescar lista
+            }
         }
     }
 }

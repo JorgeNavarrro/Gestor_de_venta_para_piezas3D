@@ -1,17 +1,19 @@
-﻿using System;
+﻿using SQLite; // Usamos SQLite en lugar de MySQL
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Modelos
 {
+    // Esto crea una tabla llamada "Productos" en tu archivo local
+    [Table("Productos")]
     public class ModeloReference
     {
-        public string Nombre { get; set; }
-        public string Dimensiones { get; set; }
-        public string Material { get; set; }
-        public string Categoria { get; set; }
-        public string Descripcion { get; set; }
+        // ID único y autoincrementable (1, 2, 3...)
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
 
-        // En una app real, aquí iría la ruta de la imagen
-        // Por ahora usaremos un color o un placeholder
-        public string ImagenPlaceholder => "Cube";
+        public string Nombre { get; set; }
+        public string Categoria { get; set; }
+        public string Material { get; set; }
+        public string Descripcion { get; set; }
+        public string Imagen { get; set; }
     }
 }

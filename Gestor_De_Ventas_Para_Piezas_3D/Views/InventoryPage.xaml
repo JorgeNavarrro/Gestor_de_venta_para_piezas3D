@@ -8,111 +8,82 @@
 
     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto">
 
-        <!-- 1. ENCABEZADO SUPERIOR -->
-        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="120" Padding="20,10">
+        <!-- 1. ENCABEZADO -->
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="100" Padding="20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <!-- Logo -->
                 <ColumnDefinition Width="*"/>
-                <!-- Título Central -->
                 <ColumnDefinition Width="Auto"/>
-                <!-- Texto Derecha -->
             </Grid.ColumnDefinitions>
 
-            <!-- Logo Placeholder -->
-            <Frame HorizontalOptions="Start" 
-       CornerRadius="85"       
-       HeightRequest="150"      
-       WidthRequest="150"       
-       Padding="0" 
-       IsClippedToBounds="True" 
-       BorderColor="Transparent"
-       BackgroundColor="Transparent" 
-       HasShadow="False">
-
-                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
-                <Image Source="logo_gestor_base_de_dato.png" 
-           Aspect="AspectFit"
-           HorizontalOptions="Center"
-           VerticalOptions="Center"/>
+            <!-- Logo -->
+            <Frame HorizontalOptions="Start" CornerRadius="85" HeightRequest="150" WidthRequest="150" Padding="0" IsClippedToBounds="True" BorderColor="Transparent" BackgroundColor="Transparent" HasShadow="False">
+                <Image Source="logo_gestor_base_de_dato.png" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Frame>
 
-
-            <!-- Título Central en Caja Blanca -->
-            <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="20,10" CornerRadius="0">
+            <!-- Título -->
+            <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="40,10" CornerRadius="0">
                 <Label Text="Inventario" FontSize="22" TextColor="Black" FontAttributes="Bold"/>
             </Frame>
 
-            <!-- Texto Derecha (Generar reporte de inventario) -->
-            <Label Grid.Column="2" Text="                           ." TextColor="#5F8090" VerticalOptions="Start" HorizontalOptions="End" FontSize="12"/>
+            <!-- Botón Agregar Nuevo -->
+            <Button Grid.Column="2" Text="+ Nuevo" BackgroundColor="#2C3E50" TextColor="White" FontSize="12" HeightRequest="40" HorizontalOptions="End" VerticalOptions="Center" Clicked="BtnAgregar_Clicked"/>
         </Grid>
 
-        <!-- 2. TÍTULO INTERMEDIO -->
-        <VerticalStackLayout Grid.Row="1" Padding="20, 20, 20, 10" Spacing="15">
+        <!-- 2. SUBTÍTULO -->
+        <VerticalStackLayout Grid.Row="1" Padding="20, 15, 20, 10">
             <Label Text="Control de materiales" FontSize="20" HorizontalOptions="Center" TextColor="Black"/>
         </VerticalStackLayout>
 
-        <!-- 3. ENCABEZADO DE LA TABLA -->
-        <Grid Grid.Row="2" 
-              ColumnDefinitions="30, 2*, 2*, 3*, 1.5*, 1.5*, 1.5*, 2*" 
-              BackgroundColor="#C4D6E2" 
-              Padding="10">
-            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="1" Text="Nombre del Artículo" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="2" Text="Categoría" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="3" Text="Detalles (Material/Color)" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="4" Text="Stock Actual" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="5" Text="Unidad" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="6" Text="Estado" FontAttributes="Bold" TextColor="#1F2937"/>
-            <Label Grid.Column="7" Text="Precio/Costo" FontAttributes="Bold" TextColor="#1F2937"/>
+        <!-- 3. ENCABEZADO TABLA -->
+        <Grid Grid.Row="2" ColumnDefinitions="30, 3*, 2*, 3*, 1.5*, 2*, 2*, 1.5*, 40" BackgroundColor="#C4D6E2" Padding="10">
+            <Label Grid.Column="0" Text="ID" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="1" Text="Nombre del Artículo" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="2" Text="Categoría" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="3" Text="Detalles" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="4" Text="Stock" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="5" Text="Unidad" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="6" Text="Estado" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="7" Text="Costo" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
+            <Label Grid.Column="8" Text="" />
+            <!-- Espacio botón borrar -->
         </Grid>
 
-        <!-- 4. LISTA DE DATOS (TABLA) -->
+        <!-- 4. LISTA DE MATERIALES -->
         <CollectionView Grid.Row="3" x:Name="cvInventario" SelectionMode="Single" SelectionChanged="OnItemSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:InventarioItem">
-                    <Grid ColumnDefinitions="30, 2*, 2*, 3*, 1.5*, 1.5*, 1.5*, 2*" Padding="10" RowDefinitions="Auto, Auto">
+                    <Grid ColumnDefinitions="30, 3*, 2*, 3*, 1.5*, 2*, 2*, 1.5*, 40" Padding="10" RowDefinitions="Auto, Auto">
+                        <BoxView Grid.Row="1" Grid.ColumnSpan="9" HeightRequest="1" Color="LightGray" Margin="0,5"/>
 
-                        <!-- Separador visual -->
-                        <BoxView Grid.Row="1" Grid.ColumnSpan="8" HeightRequest="1" Color="LightGray" Margin="0,5"/>
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding NombreArticulo}" VerticalOptions="Center" TextColor="Black" FontSize="11" FontAttributes="Bold"/>
+                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Categoria}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
+                        <Label Grid.Row="0" Grid.Column="3" Text="{Binding Detalles}" VerticalOptions="Center" TextColor="Gray" FontSize="10"/>
 
-                        <!-- Datos -->
-                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Id}" VerticalOptions="Center" TextColor="Black"/>
-                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding NombreArticulo}" VerticalOptions="Center" TextColor="Black"/>
-                        <Label Grid.Row="0" Grid.Column="2" Text="{Binding Categoria}" VerticalOptions="Center" TextColor="Black"/>
-                        <Label Grid.Row="0" Grid.Column="3" Text="{Binding Detalles}" VerticalOptions="Center" TextColor="Black" LineBreakMode="WordWrap"/>
+                        <!-- Stock (Rojo si es bajo) -->
+                        <Label Grid.Row="0" Grid.Column="4" Text="{Binding StockActual}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold" FontSize="14"/>
 
-                        <!-- Stock Actual y Unidad -->
-                        <HorizontalStackLayout Grid.Row="0" Grid.Column="4" Spacing="5" VerticalOptions="Center">
-                            <Label Text="{Binding StockActual}" FontAttributes="Bold" TextColor="{Binding ColorEstado}"/>
-                        </HorizontalStackLayout>
-                        <Label Grid.Row="0" Grid.Column="5" Text="{Binding Unidad}" VerticalOptions="Center" TextColor="Black"/>
+                        <Label Grid.Row="0" Grid.Column="5" Text="{Binding Unidad}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
 
-                        <!-- Estado (Resaltado) -->
-                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding Estado}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold"/>
+                        <!-- Estado -->
+                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding Estado}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold" FontSize="11"/>
 
-                        <!-- Precio / Costo -->
-                        <VerticalStackLayout Grid.Row="0" Grid.Column="7" VerticalOptions="Center" HorizontalOptions="End">
-                            <Label Text="{Binding PrecioCostoFormateado}" FontAttributes="Bold" TextColor="{Binding ColorEstado}"/>
-                            <Label Text="{Binding TipoPrecio, StringFormat='({0})'}" FontSize="11" TextColor="Gray"/>
-                        </VerticalStackLayout>
+                        <Label Grid.Row="0" Grid.Column="7" Text="{Binding PrecioCostoFormateado}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
+
+                        <!-- Botón Borrar -->
+                        <ImageButton Grid.Row="0" Grid.Column="8" Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" Clicked="BtnBorrar_Clicked" CommandParameter="{Binding .}" BackgroundColor="Transparent">
+                            <!-- Aquí deberías usar un icono de basura real si tienes, uso el bot como placeholder temporal o un texto "X" -->
+                        </ImageButton>
+                        <Button Grid.Row="0" Grid.Column="8" Text="X" BackgroundColor="#E74C3C" TextColor="White" HeightRequest="30" WidthRequest="30" Padding="0" CornerRadius="15" Clicked="BtnBorrar_Clicked" CommandParameter="{Binding .}"/>
 
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 5. Botón Generar Reporte -->
-        <Button Grid.Row="4" 
-                Text="Generar reporte" 
-                BackgroundColor="#1F2937" 
-                TextColor="White" 
-                CornerRadius="10" 
-                WidthRequest="250"
-                Margin="0,20,0,20"
-                HorizontalOptions="Center"
-                FontSize="18"
-                Clicked="BtnGenerarReporte_Clicked"/>
+        <!-- 5. BOTÓN GENERAR REPORTE -->
+        <Button Grid.Row="4" Text="Generar reporte" BackgroundColor="#2C3E50" TextColor="White" CornerRadius="20" WidthRequest="250" HeightRequest="50" Margin="0,10,0,20" Clicked="BtnGenerarReporte_Clicked"/>
 
     </Grid>
 </ContentPage>

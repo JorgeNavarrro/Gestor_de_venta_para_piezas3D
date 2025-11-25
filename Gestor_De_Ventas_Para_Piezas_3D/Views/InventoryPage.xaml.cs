@@ -1,55 +1,86 @@
 using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System.Collections.ObjectModel;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class InventoryPage : ContentPage
 {
-    // Lista observable conectada al XAML
     public ObservableCollection<InventarioItem> ListaInventario { get; set; }
-    // Almacena la lista completa para poder pasarla al reporte
+
+    // Para pasar al reporte
     private List<InventarioItem> _todosLosItems;
 
     public InventoryPage()
     {
         InitializeComponent();
-        CargarDatos();
-    }
-
-    private void CargarDatos()
-    {
-        // Datos de prueba basados en el PDF
-        _todosLosItems = new List<InventarioItem>
-        {
-            new InventarioItem { Id = 1, NombreArticulo = "Filamento PLA Premium", Categoria = "Material", Detalles = "PLA / Rojo", StockActual = 12, Unidad = "Rollos (1kg)", Estado = "En Stock", PrecioCosto = 450.00m, TipoPrecio = "Costo" },
-            new InventarioItem { Id = 2, NombreArticulo = "Filamento PETG", Categoria = "Material", Detalles = "PETG / Negro", StockActual = 3, Unidad = "Rollos (1kg)", Estado = "Bajo Stock", PrecioCosto = 520.00m, TipoPrecio = "Costo" },
-            new InventarioItem { Id = 3, NombreArticulo = "Resina UV Estándar", Categoria = "Material", Detalles = "Resina / Gris", StockActual = 5, Unidad = "Botellas (1L)", Estado = "En Stock", PrecioCosto = 800.00m, TipoPrecio = "Costo" },
-            new InventarioItem { Id = 4, NombreArticulo = "Baby Yoda (Grogu)", Categoria = "Producto Terminado", Detalles = "PLA / Verde (Pintado)", StockActual = 8, Unidad = "Piezas", Estado = "En Stock", PrecioCosto = 250.00m, TipoPrecio = "Venta" },
-            new InventarioItem { Id = 5, NombreArticulo = "Stormtrooper Casco", Categoria = "Producto Terminado", Detalles = "Resina / Blanco", StockActual = 0, Unidad = "Piezas", Estado = "Agotado", PrecioCosto = 600.00m, TipoPrecio = "Venta" },
-            new InventarioItem { Id = 6, NombreArticulo = "Boquilla 0.4mm (MK8)", Categoria = "Refacción", Detalles = "Latón", StockActual = 25, Unidad = "Piezas", Estado = "En Stock", PrecioCosto = 30.00m, TipoPrecio = "Costo" }
-        };
-
-        ListaInventario = new ObservableCollection<InventarioItem>(_todosLosItems);
+        ListaInventario = new ObservableCollection<InventarioItem>();
         cvInventario.ItemsSource = ListaInventario;
     }
 
-    // Maneja la selección de un ítem en la tabla principal
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await CargarDatosBD();
+    }
+
+    private async Task CargarDatosBD()
+    {
+        var db = new DatabaseService();
+        _todosLosItems = await db.ObtenerInventarioAsync();
+
+        // Si está vacío, metemos datos de ejemplo para que no se vea triste
+        if (_todosLosItems.Count == 0)
+        {
+            await db.GuardarItemInventarioAsync(new InventarioItem { NombreArticulo = "Filamento PLA", Categoria = "Material", Detalles = "Rojo", StockActual = 12, Unidad = "Rollos", PrecioCosto = 450 });
+            await db.GuardarItemInventarioAsync(new InventarioItem { NombreArticulo = "Filamento PETG", Categoria = "Material", Detalles = "Negro", StockActual = 3, Unidad = "Rollos", PrecioCosto = 520 });
+            _todosLosItems = await db.ObtenerInventarioAsync();
+        }
+
+        ListaInventario.Clear();
+        foreach (var item in _todosLosItems)
+        {
+            ListaInventario.Add(item);
+        }
+    }
+
+    // Ir a formulario para AGREGAR
+    private async void BtnAgregar_Clicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new InventoryItemFormPage());
+    }
+
+    // Ir al REPORTE
+    private async void BtnGenerarReporte_Clicked(object sender, EventArgs e)
+    {
+        // Pasamos la lista actual al reporte
+        await Navigation.PushAsync(new InventoryReportPage(_todosLosItems));
+    }
+
+    // BORRAR ITEM
+    private async void BtnBorrar_Clicked(object sender, EventArgs e)
+    {
+        var button = sender as Button; // O ImageButton según uses
+        if (button?.CommandParameter is InventarioItem itemABorrar)
+        {
+            bool confirmar = await DisplayAlert("Eliminar", $"¿Seguro que deseas eliminar '{itemABorrar.NombreArticulo}'?", "Sí", "No");
+            if (confirmar)
+            {
+                var db = new DatabaseService();
+                await db.BorrarItemInventarioAsync(itemABorrar);
+                await CargarDatosBD(); // Recargar lista
+            }
+        }
+    }
+
+    // EDITAR (Al tocar la fila)
     private async void OnItemSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is InventarioItem item)
         {
-            await DisplayAlert("Detalle", $"Artículo seleccionado: {item.NombreArticulo}.\nStock: {item.StockActual} {item.Unidad}", "OK");
-            // Deseleccionar
+            // Navegar al formulario en modo edición
+            await Navigation.PushAsync(new InventoryItemFormPage(item));
             ((CollectionView)sender).SelectedItem = null;
         }
-    }
-
-    // --- LÓGICA DE REPORTE (Opción B) ---
-    // Abre la nueva página de reporte, enviando los datos (POO)
-    private async void BtnGenerarReporte_Clicked(object sender, EventArgs e)
-    {
-        // Navegamos a la página de reporte y le pasamos la lista completa de inventario.
-        // Asegúrate de que la clase InventoryReportPage exista.
-        await Navigation.PushAsync(new InventoryReportPage(_todosLosItems));
     }
 }

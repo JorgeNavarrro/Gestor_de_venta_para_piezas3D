@@ -1,65 +1,75 @@
 using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System.Collections.ObjectModel;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class OrderAgendaPage : ContentPage
 {
-    // Lista que se muestra en pantalla
-    public ObservableCollection<Pedido> ListaPedidos { get; set; }
-
-    // Lista auxiliar para guardar todos los datos y poder buscar
-    private List<Pedido> _todosLosPedidos;
+    public ObservableCollection<Venta> ListaPedidos { get; set; }
 
     public OrderAgendaPage()
     {
         InitializeComponent();
-        CargarDatos();
-    }
-
-    private void CargarDatos()
-    {
-        // Creamos los datos iniciales
-        _todosLosPedidos = new List<Pedido>
-        {
-            new Pedido { Id = 1, Cliente = "Ana Martinez", Producto = "Maceta", FechaEntrega = "20/10/2025", Estado = "En producción", FechaInicio = "17/10/2025", Duracion = "" },
-            new Pedido { Id = 2, Cliente = "Luis Torres", Producto = "Llavero", FechaEntrega = "22/10/2025", Estado = "Pendiente", FechaInicio = "18/10/2025", Duracion = "" },
-            new Pedido { Id = 3, Cliente = "Jorge Navarro", Producto = "Figura", FechaEntrega = "25/10/2025", Estado = "Completado", FechaInicio = "22/10/2025", Duracion = "3 días" }
-        };
-
-        // Inicializamos la lista visual con todos los datos
-        ListaPedidos = new ObservableCollection<Pedido>(_todosLosPedidos);
+        ListaPedidos = new ObservableCollection<Venta>();
         cvPedidos.ItemsSource = ListaPedidos;
     }
 
-    // --- MÉTODO DE BÚSQUEDA ---
-    private void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
+    // Cargar datos cada vez que aparece la pantalla
+    protected override async void OnAppearing()
     {
-        var textoBusqueda = e.NewTextValue;
+        base.OnAppearing();
+        await CargarDatosDesdeBD();
+    }
 
-        if (string.IsNullOrWhiteSpace(textoBusqueda))
-        {
-            // Si no hay texto, mostramos todo de nuevo
-            cvPedidos.ItemsSource = new ObservableCollection<Pedido>(_todosLosPedidos);
-        }
-        else
-        {
-            // Filtramos por Cliente o Producto (ignorando mayúsculas/minúsculas)
-            var resultados = _todosLosPedidos
-                .Where(p => p.Cliente.ToLower().Contains(textoBusqueda.ToLower()) ||
-                            p.Producto.ToLower().Contains(textoBusqueda.ToLower()))
-                .ToList();
+    private async Task CargarDatosDesdeBD()
+    {
+        var db = new DatabaseService();
+        var ventas = await db.ObtenerVentasAsync();
 
-            cvPedidos.ItemsSource = new ObservableCollection<Pedido>(resultados);
+        ListaPedidos.Clear();
+        foreach (var venta in ventas)
+        {
+            // Si el estado está vacío (ventas viejas), le ponemos "Pendiente" visualmente
+            if (string.IsNullOrEmpty(venta.Estado)) venta.Estado = "Pendiente";
+
+            ListaPedidos.Add(venta);
         }
     }
 
-    // --- MÉTODO DE NAVEGACIÓN ---
+    // --- BÚSQUEDA ---
+    private async void OnSearchBarTextChanged(object sender, TextChangedEventArgs e)
+    {
+        var texto = e.NewTextValue;
+        var db = new DatabaseService();
+        var todas = await db.ObtenerVentasAsync();
+
+        if (string.IsNullOrWhiteSpace(texto))
+        {
+            ListaPedidos.Clear();
+            foreach (var v in todas) ListaPedidos.Add(v);
+        }
+        else
+        {
+            var filtradas = todas.Where(v =>
+                (v.Cliente?.ToLower().Contains(texto.ToLower()) ?? false) ||
+                (v.Producto?.ToLower().Contains(texto.ToLower()) ?? false)
+            ).ToList();
+
+            ListaPedidos.Clear();
+            foreach (var v in filtradas) ListaPedidos.Add(v);
+        }
+    }
+
+    // --- SELECCIÓN (EDITAR) ---
     private async void OnPedidoSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Pedido pedidoSeleccionado)
+        if (e.CurrentSelection.FirstOrDefault() is Venta ventaSeleccionada)
         {
-            await Navigation.PushAsync(new OrderDetailPage(pedidoSeleccionado));
+            // Navegar al formulario de edición con los datos de la venta
+            await Navigation.PushAsync(new SaleFormPage(ventaSeleccionada));
+
+            // Limpiar selección
             ((CollectionView)sender).SelectedItem = null;
         }
     }

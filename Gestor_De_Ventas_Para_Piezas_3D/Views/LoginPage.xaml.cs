@@ -1,40 +1,55 @@
-using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+﻿using Microsoft.Maui.Controls;
+using Gestor_De_Ventas_Para_Piezas_3D.Services;
+using System;
 
-namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
-
-public partial class LoginPage : ContentPage
+namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas
 {
-    public LoginPage()
+    public partial class LoginPage : ContentPage
     {
-        InitializeComponent();
-    }
-
-    // 1. Evento para el bot�n INGRESAR
-    private async void BtnIngresar_Clicked(object sender, EventArgs e)
-    {
-        Usuario usuario = new Usuario();
-        usuario.NombreUsuario = txtUsuario.Text;
-        usuario.Password = txtPassword.Text;
-
-        if (usuario.ValidarLogin())
+        public LoginPage()
         {
-            await Navigation.PushAsync(new MenuPage());
+            InitializeComponent();
         }
-        else
+
+        // Botón "Ingresar"
+        private async void OnLoginClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Error", "Usuario o contrase�a incorrectos", "OK");
+            if (string.IsNullOrWhiteSpace(txtUser.Text) || string.IsNullOrWhiteSpace(txtPass.Text))
+            {
+                await DisplayAlert("Error", "Por favor ingresa usuario y contraseña", "OK");
+                return;
+            }
+
+            var db = new DatabaseService();
+
+            // Consultamos a la base de datos SQLite
+            var usuario = await db.LoginUsuarioAsync(txtUser.Text, txtPass.Text);
+
+            if (usuario != null)
+            {
+                // LOGIN EXITOSO -> Vamos al Menú Principal
+                // Cambiamos la raíz para que no puedan volver al login con "Atrás"
+                Application.Current.MainPage = new NavigationPage(new MenuPage());
+            }
+            else
+            {
+                await DisplayAlert("Acceso Denegado", "Usuario o contraseña incorrectos.", "OK");
+            }
         }
-    }
 
-    // 2. Evento para el label OLVID� CONTRASE�A
-    private async void OnOlvidePasswordTapped(object sender, TappedEventArgs e)
-    {
-        await Navigation.PushAsync(new PasswordRecoveryPage());
-    }
+        // Botón "Nuevo Usuario"
+        private async void OnRegisterClicked(object sender, EventArgs e)
+        {
+            // Navegar a la pantalla de registro
+            await Navigation.PushAsync(new RegisterPage());
+        }
 
-    // 3. Evento para el bot�n NUEVO USUARIO (Este es el que faltaba antes)
-    private async void BtnNuevoUsuario_Clicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new RegisterPage());
+        // Label "Olvidé mi contraseña" (CORREGIDO)
+        private async void OnOlvidePassClicked(object sender, TappedEventArgs e)
+        {
+            // ANTES: Mostraba alerta
+            // AHORA: Navega a la pantalla real que creaste
+            await Navigation.PushAsync(new PasswordRecoveryPage());
+        }
     }
 }

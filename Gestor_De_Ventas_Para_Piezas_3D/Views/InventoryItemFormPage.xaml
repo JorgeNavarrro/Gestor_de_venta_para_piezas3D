@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.InventoryItemFormPage"
+             Title="Artículo de Inventario"
+             BackgroundColor="#F0F2F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="Datos del Material" FontSize="24" FontAttributes="Bold" TextColor="#2C3E50" HorizontalOptions="Center"/>
+
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="20">
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Nombre del Artículo" TextColor="Gray"/>
+                    <Entry x:Name="txtNombre" Placeholder="Ej. Resina UV" TextColor="Black"/>
+
+                    <Label Text="Categoría" TextColor="Gray"/>
+                    <Picker x:Name="pkrCategoria" TextColor="Black" Title="Selecciona...">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Material</x:String>
+                                <x:String>Refacción</x:String>
+                                <x:String>Producto Terminado</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+
+                    <Label Text="Detalles (Color/Tipo)" TextColor="Gray"/>
+                    <Entry x:Name="txtDetalles" Placeholder="Ej. Gris / Alta resistencia" TextColor="Black"/>
+
+                    <Label Text="Stock Actual" TextColor="Gray"/>
+                    <Entry x:Name="txtStock" Keyboard="Numeric" Placeholder="0" TextColor="Black"/>
+                    <Label Text="* Menos de 50 se marcará como Bajo Stock" FontSize="10" TextColor="Red"/>
+
+                    <Label Text="Unidad de Medida" TextColor="Gray"/>
+                    <Picker x:Name="pkrUnidad" TextColor="Black" Title="Selecciona...">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Piezas</x:String>
+                                <x:String>Rollos (1kg)</x:String>
+                                <x:String>Botellas (1L)</x:String>
+                                <x:String>Cajas</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+
+                    <Label Text="Precio / Costo" TextColor="Gray"/>
+                    <Entry x:Name="txtCosto" Keyboard="Numeric" Placeholder="0.00" TextColor="Black"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Guardar Artículo" BackgroundColor="#2C3E50" TextColor="White" CornerRadius="20" HeightRequest="50" Clicked="BtnGuardar_Clicked"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

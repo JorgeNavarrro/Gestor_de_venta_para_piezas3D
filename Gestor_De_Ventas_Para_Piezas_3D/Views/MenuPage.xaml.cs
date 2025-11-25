@@ -1,3 +1,6 @@
+ï»¿using System;
+using Microsoft.Maui.Controls;
+
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class MenuPage : ContentPage
@@ -7,50 +10,52 @@ public partial class MenuPage : ContentPage
         InitializeComponent();
     }
 
-    // Botón Cerrar Sesión (Vuelve al Login)
-    private async void BtnCerrarSesion_Clicked(object sender, EventArgs e)
+    // âœ… CORREGIDO: BotÃ³n Cerrar SesiÃ³n
+    // Usamos Application.Current.MainPage para reiniciar la app en el Login
+    private void BtnCerrarSesion_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PopAsync();
+        Application.Current.MainPage = new NavigationPage(new LoginPage());
     }
 
-    // Opción 1: Registrar nueva venta
+    // --- TUS NAVEGACIONES ORIGINALES (INTACTAS) ---
+
+    // OpciÃ³n 1: Registrar nueva venta
     private async void OnRegistrarVentaTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new SalesRegisterPage());
     }
 
-    // Opción 2: Actualizar agenda de pedidos
+    // OpciÃ³n 2: Actualizar agenda de pedidos
     private async void OnAgendaPedidosTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new OrderAgendaPage());
     }
 
-    // Opción 3: Registrar pago de pedido
+    // OpciÃ³n 3: Registrar pago de pedido
     private async void OnPagosTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new PaymentsPage());
     }
 
-    // Opción 4: Generar órdenes de envío
+    // OpciÃ³n 4: Generar Ã³rdenes de envÃ­o
     private async void OnGenerarOrdenesTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new ShippingOrdersPage());
     }
 
-    // Opción 5 (CENTRAL): Consultar Estado de Pedido / Producción
-    // Este conecta con la nueva pantalla OrderStatusPage
+    // OpciÃ³n 5 (CENTRAL): Consultar Estado de Pedido / ProducciÃ³n
     private async void OnEstadoPedidoTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new OrderStatusPage());
     }
 
-    // Opción 6 (DERECHA): Verificar / Solicitar inventario
+    // OpciÃ³n 6 (DERECHA): Verificar / Solicitar inventario
     private async void OnInventarioTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new InventoryPage());
     }
 
-    // Opción 7 (INFERIOR CENTRAL): Catálogo de Referencias (NUEVO)
+    // OpciÃ³n 7 (INFERIOR CENTRAL): CatÃ¡logo de Referencias
     private async void OnCatalogoTapped(object sender, TappedEventArgs e)
     {
         await Navigation.PushAsync(new CatalogPage());

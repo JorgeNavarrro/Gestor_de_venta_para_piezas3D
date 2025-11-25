@@ -9,58 +9,56 @@
     <Grid RowDefinitions="Auto, Auto, Auto, *">
 
         <!-- 1. ENCABEZADO -->
-        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="120" Padding="20,10">
-            <Frame CornerRadius="20" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="30,10" HasShadow="True">
+        <Grid Grid.Row="0" BackgroundColor="#5F8090" HeightRequest="100" Padding="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Logo -->
+            <Frame HorizontalOptions="Start" CornerRadius="85" HeightRequest="150" WidthRequest="150" Padding="0" IsClippedToBounds="True" BorderColor="Transparent" BackgroundColor="Transparent" HasShadow="False">
+                <Image Source="logo_gestor_base_de_dato.png" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
+
+            <!-- Título Central -->
+            <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="30,10" CornerRadius="20">
                 <Label Text="Agenda de Producción" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
             </Frame>
-
-            <Frame HorizontalOptions="Start" 
-       CornerRadius="85"       
-       HeightRequest="150"      
-       WidthRequest="150"       
-       Padding="0" 
-       IsClippedToBounds="True" 
-       BorderColor="Transparent"
-       BackgroundColor="Transparent" 
-       HasShadow="False">
-
-                <!-- Asegúrate de que tu imagen se llame así en Resources/Images -->
-                <Image Source="logo_gestor_base_de_dato.png" 
-           Aspect="AspectFit"
-           HorizontalOptions="Center"
-           VerticalOptions="Center"/>
-            </Frame>
-
         </Grid>
 
         <!-- 2. TÍTULO SECCIÓN -->
-        <Label Grid.Row="1" Text="Estado De Pedido" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black" Margin="0,15,0,5"/>
+        <Label Grid.Row="1" Text="Estado De Pedido" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black" Margin="0,15,0,10"/>
 
         <!-- 3. ENCABEZADO TABLA -->
         <Grid Grid.Row="2" ColumnDefinitions="60, *, *, *, *" HeightRequest="50">
+            <!-- Columna ID -->
             <Label Grid.Column="0" Text="ID&#10;Pedido" HorizontalTextAlignment="Center" VerticalOptions="Center" FontAttributes="Bold" FontSize="12" TextColor="Black"/>
 
+            <!-- Columna Venta -->
             <Frame Grid.Column="1" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
                 <Label Text="Venta" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
             </Frame>
+            <!-- Columna Producción -->
             <Frame Grid.Column="2" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
-                <Label Text="Producción" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
+                <Label Text="En prod." HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
             </Frame>
+            <!-- Columna Completado -->
             <Frame Grid.Column="3" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
                 <Label Text="Completado" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
             </Frame>
+            <!-- Columna Entregado -->
             <Frame Grid.Column="4" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
                 <Label Text="Entregado" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="Black"/>
             </Frame>
         </Grid>
 
-        <!-- 4. LISTA DE PEDIDOS -->
-        <CollectionView Grid.Row="3" x:Name="cvProduccion">
+        <!-- 4. LISTA DE DATOS (TABLA) -->
+        <CollectionView Grid.Row="3" x:Name="cvProduccion" SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:Pedido">
+                <DataTemplate x:DataType="model:Venta">
                     <Grid ColumnDefinitions="60, *, *, *, *" HeightRequest="50">
 
-                        <!-- Columna ID (Clickeable para ver detalles) -->
+                        <!-- Columna ID (Clickeable para detalles) -->
                         <Frame Grid.Column="0" BackgroundColor="White" BorderColor="Gray" CornerRadius="0" Padding="0">
                             <Label Text="{Binding Id, StringFormat='{0:D2}'}" 
                                    HorizontalOptions="Center" VerticalOptions="Center" 
@@ -72,9 +70,9 @@
                             </Label>
                         </Frame>
 
-                        <!-- Columna Venta (Roja) -->
+                        <!-- Columna Venta (Rosa) -->
                         <Frame Grid.Column="1" BackgroundColor="#FFB6C1" BorderColor="Gray" CornerRadius="0" Padding="0">
-                            <Label Text="{Binding IsVenta}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{Binding MarcaVenta}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
@@ -82,7 +80,7 @@
 
                         <!-- Columna Producción (Naranja) -->
                         <Frame Grid.Column="2" BackgroundColor="#FFE4B5" BorderColor="Gray" CornerRadius="0" Padding="0">
-                            <Label Text="{Binding IsProduccion}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{Binding MarcaProduccion}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
@@ -90,7 +88,7 @@
 
                         <!-- Columna Completado (Verde) -->
                         <Frame Grid.Column="3" BackgroundColor="#98FB98" BorderColor="Gray" CornerRadius="0" Padding="0">
-                            <Label Text="{Binding IsCompletado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{Binding MarcaCompletado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
@@ -98,7 +96,7 @@
 
                         <!-- Columna Entregado (Morado) -->
                         <Frame Grid.Column="4" BackgroundColor="#E0B0FF" BorderColor="Gray" CornerRadius="0" Padding="0">
-                            <Label Text="{Binding IsEntregado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                            <Label Text="{Binding MarcaEntregado}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnEstadoTapped" CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>

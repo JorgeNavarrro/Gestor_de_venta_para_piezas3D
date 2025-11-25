@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Gestor_De_Ventas_Para_Piezas_3D.Modelos"
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.AgregarProductoPage" 
+             Title="Nuevo Producto"
+             BackgroundColor="White">
+
+    <!-- Nota: Cambié x:Class a "...AgregarProductoPage" para que coincida con el C# -->
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Agregar Nuevo Producto" 
+                   FontSize="22" 
+                   FontAttributes="Bold" 
+                   TextColor="#2D4059" 
+                   HorizontalOptions="Center"/>
+
+            <!-- Campo: Nombre -->
+            <VerticalStackLayout>
+                <Label Text="Nombre del Producto" TextColor="Gray"/>
+                <Entry x:Name="txtNombre" Placeholder="Ej. Figura Iron Man" TextColor="Black"/>
+            </VerticalStackLayout>
+
+            <!-- Campo: Categoría -->
+            <VerticalStackLayout>
+                <Label Text="Categoría" TextColor="Gray"/>
+                <Picker x:Name="pkrCategoria" Title="Selecciona una categoría" TextColor="Black">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Coleccionables</x:String>
+                            <x:String>Accesorios</x:String>
+                            <x:String>Repuestos</x:String>
+                            <x:String>Merch</x:String>
+                            <x:String>Arte</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </VerticalStackLayout>
+
+            <!-- Campo: Material -->
+            <VerticalStackLayout>
+                <Label Text="Material" TextColor="Gray"/>
+                <Entry x:Name="txtMaterial" Placeholder="Ej. Resina / PLA" TextColor="Black"/>
+            </VerticalStackLayout>
+
+            <!-- Campo: Descripción -->
+            <VerticalStackLayout>
+                <Label Text="Descripción" TextColor="Gray"/>
+                <Editor x:Name="txtDescripcion" Placeholder="Detalles del producto..." HeightRequest="100" TextColor="Black"/>
+            </VerticalStackLayout>
+
+            <!-- Campo: Imagen -->
+            <VerticalStackLayout>
+                <Label Text="Nombre de Imagen (Ej. ast2.png)" TextColor="Gray"/>
+                <Entry x:Name="txtImagen" Placeholder="dotnet_bot.png" Text="dotnet_bot.png" TextColor="Black"/>
+                <Label Text="* Debe estar en la carpeta Resources/Images" FontSize="10" TextColor="Red"/>
+            </VerticalStackLayout>
+
+            <!-- Botones -->
+            <HorizontalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,0">
+                <Button Text="Guardar" 
+                        Clicked="OnGuardarClicked" 
+                        BackgroundColor="#2D4059" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        WidthRequest="120"/>
+
+                <Button Text="Cancelar" 
+                        Clicked="OnCancelarClicked" 
+                        BackgroundColor="LightGray" 
+                        TextColor="Black"
+                        WidthRequest="120"/>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
