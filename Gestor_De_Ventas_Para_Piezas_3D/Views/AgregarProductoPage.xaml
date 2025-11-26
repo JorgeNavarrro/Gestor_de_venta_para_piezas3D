@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:Gestor_De_Ventas_Para_Piezas_3D.Modelos"
-             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.AgregarProductoPage" 
+             x:Class="Gestor_De_Ventas_Para_Piezas_3D.Vistas.AgregarProductoPage"
              Title="Nuevo Producto"
              BackgroundColor="White">
-
-    <!-- Nota: Cambié x:Class a "...AgregarProductoPage" para que coincida con el C# -->
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
@@ -17,13 +14,12 @@
                    TextColor="#2D4059" 
                    HorizontalOptions="Center"/>
 
-            <!-- Campo: Nombre -->
+            <!-- Campos Normales -->
             <VerticalStackLayout>
                 <Label Text="Nombre del Producto" TextColor="Gray"/>
                 <Entry x:Name="txtNombre" Placeholder="Ej. Figura Iron Man" TextColor="Black"/>
             </VerticalStackLayout>
 
-            <!-- Campo: Categoría -->
             <VerticalStackLayout>
                 <Label Text="Categoría" TextColor="Gray"/>
                 <Picker x:Name="pkrCategoria" Title="Selecciona una categoría" TextColor="Black">
@@ -39,23 +35,28 @@
                 </Picker>
             </VerticalStackLayout>
 
-            <!-- Campo: Material -->
             <VerticalStackLayout>
                 <Label Text="Material" TextColor="Gray"/>
                 <Entry x:Name="txtMaterial" Placeholder="Ej. Resina / PLA" TextColor="Black"/>
             </VerticalStackLayout>
 
-            <!-- Campo: Descripción -->
             <VerticalStackLayout>
                 <Label Text="Descripción" TextColor="Gray"/>
-                <Editor x:Name="txtDescripcion" Placeholder="Detalles del producto..." HeightRequest="100" TextColor="Black"/>
+                <Editor x:Name="txtDescripcion" Placeholder="Detalles del producto..." HeightRequest="80" TextColor="Black"/>
             </VerticalStackLayout>
 
-            <!-- Campo: Imagen -->
-            <VerticalStackLayout>
-                <Label Text="Nombre de Imagen (Ej. ast2.png)" TextColor="Gray"/>
-                <Entry x:Name="txtImagen" Placeholder="dotnet_bot.png" Text="dotnet_bot.png" TextColor="Black"/>
-                <Label Text="* Debe estar en la carpeta Resources/Images" FontSize="10" TextColor="Red"/>
+            <!-- SELECCIÓN DE IMAGEN (NUEVO) -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Imagen del Producto" TextColor="Gray" FontAttributes="Bold"/>
+
+                <Frame BorderColor="Gray" CornerRadius="10" Padding="0" HeightRequest="200" BackgroundColor="#F0F0F0" HasShadow="False">
+                    <Image x:Name="imgPreview" Aspect="AspectFit" Source="dotnet_bot.png" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Frame>
+
+                <Button Text="📷 Seleccionar Imagen" 
+                        Clicked="OnSeleccionarImagenClicked" 
+                        BackgroundColor="#546E7A" 
+                        TextColor="White"/>
             </VerticalStackLayout>
 
             <!-- Botones -->

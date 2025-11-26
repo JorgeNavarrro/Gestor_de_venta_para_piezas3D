@@ -6,76 +6,63 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
 public partial class CatalogPage : ContentPage
 {
-    // La lista de productos que se ve en la pantalla
+    // Colección observable para la lista de productos
     public ObservableCollection<ModeloReference> CatalogList { get; set; }
 
     public CatalogPage()
     {
         InitializeComponent();
-
-        // 1. Inicializamos la lista vacía
         CatalogList = new ObservableCollection<ModeloReference>();
-
-        // 3. Conectamos la vista con el código
         BindingContext = this;
     }
 
-    // Se ejecuta automáticamente cada vez que la pantalla aparece
+    // Cargar productos cada vez que aparece la página
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // Intentamos cargar lo que haya en la base de datos al entrar
         await CargarProductosDesdeBD();
     }
 
-    // ✅ LÓGICA DEL BOTÓN NARANJA (Prueba y Datos Iniciales)
-    // Lo cambiamos a 'public' para asegurar que el XAML lo encuentre
-    public async void OnProbarConexionClicked(object sender, EventArgs e)
+    // Botón Verde: Agregar Nuevo Producto
+    public async void OnAgregarNuevoClicked(object sender, EventArgs e)
+    {
+        // Asegúrate de que AgregarProductoPage exista en el namespace Vistas
+        await Navigation.PushAsync(new AgregarProductoPage());
+    }
+
+    // Botón Borrar (X)
+    private async void BtnBorrar_Clicked(object sender, EventArgs e)
     {
         var button = sender as Button;
-
-        if (button != null)
+        // Verificamos que el CommandParameter sea un producto válido
+        if (button?.CommandParameter is ModeloReference productoABorrar)
         {
-            button.IsEnabled = false;
-            button.Text = "⏳ Configurando...";
-        }
+            bool confirmar = await DisplayAlert("Eliminar Producto",
+                $"¿Estás seguro de que deseas eliminar '{productoABorrar.Nombre}' del catálogo?",
+                "Sí, Eliminar", "Cancelar");
 
-        var dbService = new DatabaseService();
-
-        try
-        {
-            string mensajeCarga = await dbService.CargarDatosInicialesAsync();
-            string mensajeEstado = await dbService.ProbarConexionAsync();
-
-            await DisplayAlert("Resultado", $"{mensajeCarga}\n\n{mensajeEstado}", "OK");
-            await CargarProductosDesdeBD();
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Error Inesperado", ex.Message, "OK");
-        }
-        finally
-        {
-            if (button != null)
+            if (confirmar)
             {
-                button.IsEnabled = true;
-                button.Text = "🔄 Probar Conexión";
+                var dbService = new DatabaseService();
+                await dbService.BorrarProductoAsync(productoABorrar);
+
+                // Refrescamos la lista para que desaparezca el elemento borrado
+                await CargarProductosDesdeBD();
             }
         }
     }
 
-    // ✅ LÓGICA DEL BOTÓN VERDE (¡ESTA ES LA QUE FALTABA!)
-    // IMPORTANTE: Cambiado a 'public' para corregir el error XC0002
-    public async void OnAgregarNuevoClicked(object sender, EventArgs e)
-    {
-        // Navegar a la pantalla de agregar producto
-        await Navigation.PushAsync(new AgregarProductoPage());
-    }
-
-    // Método auxiliar para leer de la BD y actualizar la interfaz
+    // Carga los productos desde la base de datos SQLite
     private async Task CargarProductosDesdeBD()
     {
         var dbService = new DatabaseService();
+
+        // Aseguramos que la BD esté lista y con datos iniciales si es nueva
+        await dbService.InicializarBaseDeDatosAsync();
+
+        // Opcional: Solo carga datos iniciales si la base está vacía
+        // await dbService.CargarDatosInicialesAsync(); 
+
         var productos = await dbService.ObtenerProductosAsync();
 
         CatalogList.Clear();
