@@ -103,14 +103,13 @@
 
                 <!-- === FILA 2 === -->
 
-                <!-- 5. Consultar Estado (CAMBIADO: Ahora estilo blanco igual que los demás) -->
+                <!-- 5. Consultar Estado -->
                 <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                        CornerRadius="15" Padding="10" BackgroundColor="White" HasShadow="True">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnEstadoPedidoTapped"/>
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="10" VerticalOptions="Center">
-                        <!-- Fondo gris claro (#E5E7EB) y texto negro por defecto -->
                         <Frame CornerRadius="10" HeightRequest="70" WidthRequest="70" BackgroundColor="#E5E7EB" Padding="0" BorderColor="Transparent">
                             <Label Text="📋" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
@@ -149,14 +148,28 @@
 
             </Grid>
 
-            <Button Text="Cerrar Sesión" 
-                    BackgroundColor="#EF4444" 
-                    TextColor="White" 
-                    CornerRadius="10" 
-                    Margin="0,10,0,0" 
-                    WidthRequest="150" 
-                    HorizontalOptions="Center" 
-                    Clicked="BtnCerrarSesion_Clicked"/>
+            <!-- BOTONES INFERIORES -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,10,0,0">
+
+                <!-- Botón Exportar BD (NUEVO)
+                <Button Text="💾 Exportar BD" 
+                        BackgroundColor="#1F2937" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        WidthRequest="150" 
+                        HeightRequest="45"
+                        Clicked="BtnExportarBD_Clicked"/>  -->
+
+                <!-- Botón Cerrar Sesión -->
+                <Button Text="Cerrar Sesión" 
+                        BackgroundColor="#EF4444" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        WidthRequest="150" 
+                        HeightRequest="45"
+                        Clicked="BtnCerrarSesion_Clicked"/>
+
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

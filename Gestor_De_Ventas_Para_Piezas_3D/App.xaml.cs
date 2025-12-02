@@ -1,6 +1,7 @@
-﻿using Gestor_De_Ventas_Para_Piezas_3D.Vistas; // Necesario para ver LoginPage
+﻿using Gestor_De_Ventas_Para_Piezas_3D.Services; // Necesario
+using Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
-namespace Gestor_De_Ventas_Para_Piezas_3D; // <--- ¡ESTA LÍNEA ES CRUCIAL!
+namespace Gestor_De_Ventas_Para_Piezas_3D;
 
 public partial class App : Application
 {
@@ -8,8 +9,12 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        // Configuración del flujo de inicio:
-        // Arrancamos en el Login dentro de una página de navegación
+        // ✅ INICIALIZAR BD AL ARRCANAR
+        // Esto crea el archivo .db3 si no existe, para que siempre haya algo que exportar
+        var db = new DatabaseService();
+        Task.Run(async () => await db.InicializarBaseDeDatosAsync());
+
+        // Arrancar en el Login
         MainPage = new NavigationPage(new LoginPage());
     }
 }

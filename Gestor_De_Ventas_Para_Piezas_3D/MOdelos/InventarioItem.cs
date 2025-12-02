@@ -11,25 +11,40 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Modelos
 
         public string NombreArticulo { get; set; }
         public string Categoria { get; set; }
-        public string Detalles { get; set; } // Material/Color
+        public string Detalles { get; set; }
         public int StockActual { get; set; }
-        public string Unidad { get; set; } // Rollos, Litros, Piezas
+        public string Unidad { get; set; }
         public decimal PrecioCosto { get; set; }
-        public string TipoPrecio { get; set; } // "Costo" o "Venta"
-
-        // --- PROPIEDADES VISUALES (Calculadas) ---
+        public string TipoPrecio { get; set; }
 
         [Ignore]
         public string PrecioCostoFormateado => PrecioCosto.ToString("C", new CultureInfo("es-MX"));
 
-        // Regla de Negocio: Menor a 50 es Bajo Stock
-        [Ignore]
-        public string Estado => StockActual < 50 ? "Bajo Stock" : "En Stock";
+        // --- LÓGICA VISUAL ---
 
-        // Color: Rojo si es bajo stock, Negro si está bien
         [Ignore]
-        public string ColorEstado => StockActual < 50 ? "#E74C3C" : "Black";
+        public string Estado
+        {
+            get
+            {
+                if (StockActual < 50) return "⚠️ Alerta: Bajo Stock";
+                if (StockActual > 80) return "⚠️ Exceso de Merma";
+                return "En Stock";
+            }
+        }
 
+        [Ignore]
+        public string ColorEstado
+        {
+            get
+            {
+                if (StockActual < 50) return "#E74C3C"; // Rojo
+                if (StockActual > 80) return "#F39C12"; // Naranja
+                return "#27AE60"; // Verde
+            }
+        }
+
+        // ✅ ESTA ES LA PROPIEDAD QUE TE FALTABA
         [Ignore]
         public bool EsBajoStock => StockActual < 50;
     }

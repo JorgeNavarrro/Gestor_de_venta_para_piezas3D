@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System;
+using Microsoft.Maui.Storage;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Services
 {
@@ -11,69 +12,60 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
     {
         private SQLiteAsyncConnection _database;
 
+        // Esta variable se llena solo al iniciar métodos async, por eso fallaba la exportación
+        private string _databasePath;
+
         private async Task InitAsync()
         {
             if (_database != null)
                 return;
 
-            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "tienda.db3");
-            _database = new SQLiteAsyncConnection(databasePath);
+            _databasePath = Path.Combine(FileSystem.AppDataDirectory, "tienda.db3");
+            _database = new SQLiteAsyncConnection(_databasePath);
 
-            // --- CREACIÓN DE TABLAS ---
-            // 1. Catálogo de Productos (Referencias visuales)
             await _database.CreateTableAsync<ModeloReference>();
-
-            // 2. Usuarios (Login y Registro)
             await _database.CreateTableAsync<Usuario>();
-
-            // 3. Ventas (Registro de pedidos)
             await _database.CreateTableAsync<Venta>();
-
-            // 4. Pagos (Historial de pagos/notas)
             await _database.CreateTableAsync<Pago>();
-
-            // 5. INVENTARIO (¡NUEVO!) - Materiales y stock
             await _database.CreateTableAsync<InventarioItem>();
         }
 
-        // =================================================
-        // 1. MÉTODOS DE INVENTARIO (LO NUEVO)
-        // =================================================
-
-        public async Task<int> GuardarItemInventarioAsync(InventarioItem item)
+        // ✅ MÉTODO CORREGIDO: Define la ruta por sí mismo
+        public string ExportarBaseDeDatos()
         {
-            await InitAsync();
-            if (item.Id != 0)
-                return await _database.UpdateAsync(item);
-            else
-                return await _database.InsertAsync(item);
+            string carpetaDescargas = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string nombreArchivo = $"tienda_backup_{DateTime.Now:yyyyMMdd_HHmmss}.db3";
+            string rutaDestino = Path.Combine(carpetaDescargas, nombreArchivo);
+
+            // CORRECCIÓN AQUÍ: Calculamos la ruta explícitamente
+            string rutaOrigen = Path.Combine(FileSystem.AppDataDirectory, "tienda.db3");
+
+            try
+            {
+                if (!File.Exists(rutaOrigen))
+                {
+                    return "Error: El archivo de base de datos 'tienda.db3' no existe en el dispositivo.";
+                }
+
+                // Intentamos cerrar conexiones previas si existen (opcional en este contexto síncrono)
+                // Copiamos el archivo
+                File.Copy(rutaOrigen, rutaDestino, true);
+
+                return $"Éxito: Base de datos exportada a:\n{rutaDestino}";
+            }
+            catch (Exception ex)
+            {
+                return $"Error al exportar: {ex.Message}";
+            }
         }
 
-        public async Task<List<InventarioItem>> ObtenerInventarioAsync()
-        {
-            await InitAsync();
-            // Ordenar alfabéticamente por nombre para que se vea bonito
-            return await _database.Table<InventarioItem>().OrderBy(i => i.NombreArticulo).ToListAsync();
-        }
-
-        public async Task<int> BorrarItemInventarioAsync(InventarioItem item)
-        {
-            await InitAsync();
-            return await _database.DeleteAsync(item);
-        }
-
-
-        // =================================================
-        // 2. MÉTODOS DE VENTAS
-        // =================================================
+        // ... (Resto de métodos sin cambios) ...
 
         public async Task<int> GuardarVentaAsync(Venta venta)
         {
             await InitAsync();
-            if (venta.Id != 0)
-                return await _database.UpdateAsync(venta);
-            else
-                return await _database.InsertAsync(venta);
+            if (venta.Id != 0) return await _database.UpdateAsync(venta);
+            else return await _database.InsertAsync(venta);
         }
 
         public async Task<List<Venta>> ObtenerVentasAsync()
@@ -88,18 +80,11 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
             return await _database.DeleteAsync(venta);
         }
 
-
-        // =================================================
-        // 3. MÉTODOS DE PAGOS (NOTAS)
-        // =================================================
-
         public async Task<int> GuardarPagoAsync(Pago pago)
         {
             await InitAsync();
-            if (pago.Id != 0)
-                return await _database.UpdateAsync(pago);
-            else
-                return await _database.InsertAsync(pago);
+            if (pago.Id != 0) return await _database.UpdateAsync(pago);
+            else return await _database.InsertAsync(pago);
         }
 
         public async Task<List<Pago>> ObtenerPagosAsync()
@@ -114,23 +99,30 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
             return await _database.DeleteAsync(pago);
         }
 
+        public async Task<int> GuardarItemInventarioAsync(InventarioItem item)
+        {
+            await InitAsync();
+            if (item.Id != 0) return await _database.UpdateAsync(item);
+            else return await _database.InsertAsync(item);
+        }
 
-        // =================================================
-        // 4. MÉTODOS DE USUARIOS
-        // =================================================
+        public async Task<List<InventarioItem>> ObtenerInventarioAsync()
+        {
+            await InitAsync();
+            return await _database.Table<InventarioItem>().OrderBy(i => i.NombreArticulo).ToListAsync();
+        }
+
+        public async Task<int> BorrarItemInventarioAsync(InventarioItem item)
+        {
+            await InitAsync();
+            return await _database.DeleteAsync(item);
+        }
 
         public async Task<bool> RegistrarUsuarioAsync(Usuario usuario)
         {
             await InitAsync();
-            try
-            {
-                await _database.InsertAsync(usuario);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false; // Usuario duplicado o error
-            }
+            try { await _database.InsertAsync(usuario); return true; }
+            catch (Exception) { return false; }
         }
 
         public async Task<Usuario> LoginUsuarioAsync(string username, string password)
@@ -157,11 +149,6 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
             return false;
         }
 
-
-        // =================================================
-        // 5. MÉTODOS DE PRODUCTOS (CATÁLOGO)
-        // =================================================
-
         public async Task<string> ProbarConexionAsync()
         {
             try
@@ -176,10 +163,7 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
         public async Task<int> GuardarProductoAsync(ModeloReference producto)
         {
             await InitAsync();
-            if (producto.Id != 0)
-                return await _database.UpdateAsync(producto);
-            else
-                return await _database.InsertAsync(producto);
+            return producto.Id != 0 ? await _database.UpdateAsync(producto) : await _database.InsertAsync(producto);
         }
 
         public async Task<List<ModeloReference>> ObtenerProductosAsync()
@@ -197,7 +181,6 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
         public async Task<string> CargarDatosInicialesAsync()
         {
             await InitAsync();
-            // Aquí podrías insertar datos de prueba si quisieras, pero lo dejaremos limpio
             return "OK";
         }
 

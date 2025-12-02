@@ -27,7 +27,7 @@
             </Frame>
 
             <!-- Texto Derecha -->
-            <Label Grid.Column="2" Text="Generar orden de envío" TextColor="#1F2937" VerticalOptions="Start" HorizontalOptions="End" FontSize="12"/>
+            <Label Grid.Column="2" Text="Generar orden de envío" TextColor="#5F8090" VerticalOptions="Start" HorizontalOptions="End" FontSize="12"/>
         </Grid>
 
         <!-- 2. TÍTULO SECCIÓN -->

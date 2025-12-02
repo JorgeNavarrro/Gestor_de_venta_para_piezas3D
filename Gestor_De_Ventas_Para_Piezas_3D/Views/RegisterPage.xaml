@@ -11,7 +11,7 @@
 
             <!-- Encabezado -->
             <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-                <Label Text="Nuevo Registro" 
+                <Label Text="" 
                        FontSize="28" 
                        FontAttributes="Bold" 
                        TextColor="#CFD8DC"

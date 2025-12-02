@@ -46,7 +46,6 @@
             <Label Grid.Column="6" Text="Estado" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
             <Label Grid.Column="7" Text="Costo" FontAttributes="Bold" TextColor="#1F2937" FontSize="11"/>
             <Label Grid.Column="8" Text="" />
-            <!-- Espacio botón borrar -->
         </Grid>
 
         <!-- 4. LISTA DE MATERIALES -->
@@ -61,20 +60,17 @@
                         <Label Grid.Row="0" Grid.Column="2" Text="{Binding Categoria}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
                         <Label Grid.Row="0" Grid.Column="3" Text="{Binding Detalles}" VerticalOptions="Center" TextColor="Gray" FontSize="10"/>
 
-                        <!-- Stock (Rojo si es bajo) -->
+                        <!-- Stock: El color cambia según la cantidad -->
                         <Label Grid.Row="0" Grid.Column="4" Text="{Binding StockActual}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold" FontSize="14"/>
 
                         <Label Grid.Row="0" Grid.Column="5" Text="{Binding Unidad}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
 
-                        <!-- Estado -->
-                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding Estado}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold" FontSize="11"/>
+                        <!-- Estado: El texto cambia (Bajo/Exceso/Ok) y el color también -->
+                        <Label Grid.Row="0" Grid.Column="6" Text="{Binding Estado}" VerticalOptions="Center" TextColor="{Binding ColorEstado}" FontAttributes="Bold" FontSize="10" LineBreakMode="WordWrap"/>
 
                         <Label Grid.Row="0" Grid.Column="7" Text="{Binding PrecioCostoFormateado}" VerticalOptions="Center" TextColor="Black" FontSize="11"/>
 
                         <!-- Botón Borrar -->
-                        <ImageButton Grid.Row="0" Grid.Column="8" Source="dotnet_bot.png" HeightRequest="20" WidthRequest="20" Clicked="BtnBorrar_Clicked" CommandParameter="{Binding .}" BackgroundColor="Transparent">
-                            <!-- Aquí deberías usar un icono de basura real si tienes, uso el bot como placeholder temporal o un texto "X" -->
-                        </ImageButton>
                         <Button Grid.Row="0" Grid.Column="8" Text="X" BackgroundColor="#E74C3C" TextColor="White" HeightRequest="30" WidthRequest="30" Padding="0" CornerRadius="15" Clicked="BtnBorrar_Clicked" CommandParameter="{Binding .}"/>
 
                     </Grid>
