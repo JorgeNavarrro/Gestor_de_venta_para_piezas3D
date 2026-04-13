@@ -189,5 +189,17 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Services
             await InitAsync();
             return "OK";
         }
+
+
+        //NUEVO
+        // En Gestor_De_Ventas_Para_Piezas_3D/Services/DatabaseService.cs
+
+        public async Task<int> EliminarVentasEntregadasAsync()
+        {
+            await InitAsync();
+            // Ejecutamos una consulta SQL directa para borrar todos los que cumplan la condición
+            return await _database.ExecuteAsync("DELETE FROM Ventas WHERE Estado = ?", "Entregado");
+        }
+
     }
 }

@@ -34,7 +34,7 @@
         <VerticalStackLayout Grid.Row="1" Padding="20" Spacing="10">
             <Label Text="Buscar por forma de pago:" TextColor="#1F2937" FontAttributes="Bold"/>
 
-            <Frame BackgroundColor="White" BorderColor="#1F2937" CornerRadius="10" Padding="10,0" HeightRequest="45" HorizontalOptions="Start" WidthRequest="300" HasShadow="False">
+            <Frame BackgroundColor="White" BorderColor="#1F2937" CornerRadius="10" Padding="10,0" HeightRequest="70" HorizontalOptions="Start" WidthRequest="300" HasShadow="False">
                 <Picker x:Name="pkrMetodoPago" 
                         Title="Seleccione método..." 
                         TextColor="Black" 

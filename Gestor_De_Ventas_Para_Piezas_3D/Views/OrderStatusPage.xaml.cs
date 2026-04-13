@@ -73,5 +73,40 @@ public partial class OrderStatusPage : ContentPage
                 await CargarDatosDesdeBD();
             }
         }
+
     }
+
+    //NUVEO
+    // En Gestor_De_Ventas_Para_Piezas_3D/Views/OrderStatusPage.xaml.cs
+
+    private async void BtnLimpiarEntregados_Clicked(object sender, EventArgs e)
+    {
+        // 1. Verificar si hay algo que borrar (opcional, pero buena práctica visual)
+        var hayEntregados = ListaProduccion.Any(v => v.Estado == "Entregado");
+        if (!hayEntregados)
+        {
+            await DisplayAlert("Aviso", "No hay pedidos marcados como 'Entregado' para eliminar.", "OK");
+            return;
+        }
+
+        // 2. Pedir confirmación
+        bool confirmar = await DisplayAlert("Confirmar Eliminación",
+            "¿Estás seguro de que deseas eliminar TODOS los pedidos que ya han sido entregados? Esta acción no se puede deshacer.",
+            "Sí, Eliminar",
+            "Cancelar");
+
+        if (confirmar)
+        {
+            var db = new DatabaseService();
+
+            // 3. Llamar al método de borrado masivo
+            int eliminados = await db.EliminarVentasEntregadasAsync();
+
+            // 4. Mostrar confirmación y recargar la lista
+            await DisplayAlert("Éxito", $"Se han eliminado {eliminados} pedidos del historial.", "OK");
+            await CargarDatosDesdeBD();
+        }
+    }
+
+
 }

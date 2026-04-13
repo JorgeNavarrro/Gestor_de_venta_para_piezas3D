@@ -13,17 +13,27 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Logo -->
             <Frame HorizontalOptions="Start" CornerRadius="85" HeightRequest="150" WidthRequest="150" Padding="0" IsClippedToBounds="True" BorderColor="Transparent" BackgroundColor="Transparent" HasShadow="False">
                 <Image Source="logo_gestor_base_de_dato.png" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Frame>
 
-            <!-- Título Central -->
             <Frame Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="White" Padding="30,10" CornerRadius="20">
                 <Label Text="Agenda de Producción" FontSize="20" TextColor="Black" FontAttributes="Bold"/>
             </Frame>
+
+            <Button Grid.Column="2" 
+            Text="🗑️ Limpiar Entregados" 
+            BackgroundColor="#E74C3C" 
+            TextColor="White" 
+            FontSize="12" 
+            FontAttributes="Bold"
+            CornerRadius="10"
+            HeightRequest="50"
+            VerticalOptions="Center"
+            Clicked="BtnLimpiarEntregados_Clicked"/>
         </Grid>
 
         <!-- 2. TÍTULO SECCIÓN -->

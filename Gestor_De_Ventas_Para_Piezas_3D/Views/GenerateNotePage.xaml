@@ -46,7 +46,7 @@
                     <Label Grid.Row="6" Grid.Column="0" Text="Método de Pago:" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center"/>
 
                     <!-- CORRECCIÓN: Picker visible -->
-                    <Frame Grid.Row="6" Grid.Column="1" BorderColor="Gray" Padding="0" HeightRequest="40" CornerRadius="5" BackgroundColor="#F9F9F9">
+                    <Frame Grid.Row="6" Grid.Column="1" BorderColor="Gray" Padding="0" HeightRequest="70" CornerRadius="5" BackgroundColor="#F9F9F9">
                         <Picker x:Name="pkrMetodo" Title="Seleccione..." TextColor="Black" TitleColor="Gray" HorizontalOptions="FillAndExpand">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">

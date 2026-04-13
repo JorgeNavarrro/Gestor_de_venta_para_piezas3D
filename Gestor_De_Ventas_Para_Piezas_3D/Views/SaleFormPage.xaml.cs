@@ -1,6 +1,9 @@
-using Gestor_De_Ventas_Para_Piezas_3D.Modelos;
+Ôªøusing Gestor_De_Ventas_Para_Piezas_3D.Modelos;
 using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gestor_De_Ventas_Para_Piezas_3D.Vistas;
 
@@ -9,7 +12,9 @@ public partial class SaleFormPage : ContentPage
     private Venta _ventaActual;
     private bool _esEdicion;
 
-    // Constructor para NUEVA venta
+    // Lista para tener los objetos del inventario a la mano
+    private List<InventarioItem> _materialesDisponibles;
+
     public SaleFormPage()
     {
         InitializeComponent();
@@ -20,16 +25,40 @@ public partial class SaleFormPage : ContentPage
         btnAccion.Clicked += BtnGuardar_Clicked;
     }
 
-    // Constructor para EDITAR venta
     public SaleFormPage(Venta ventaAEditar)
     {
         InitializeComponent();
         _esEdicion = true;
         _ventaActual = ventaAEditar;
 
-        CargarDatosEnFormulario();
-
         btnAccion.Clicked += BtnGuardar_Clicked;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        // Cargar materiales al entrar para llenar el Picker
+        await CargarMateriales();
+
+        if (_esEdicion)
+        {
+            CargarDatosEnFormulario();
+        }
+    }
+
+    private async Task CargarMateriales()
+    {
+        var db = new DatabaseService();
+        _materialesDisponibles = await db.ObtenerInventarioAsync();
+
+        if (_materialesDisponibles != null && _materialesDisponibles.Count > 0)
+        {
+            pkrMaterial.ItemsSource = _materialesDisponibles.Select(m => m.NombreArticulo).ToList();
+        }
+        else
+        {
+            pkrMaterial.Title = "Inventario vac√≠o";
+        }
     }
 
     private void CargarDatosEnFormulario()
@@ -54,28 +83,37 @@ public partial class SaleFormPage : ContentPage
 
     private async void BtnGuardar_Clicked(object sender, EventArgs e)
     {
-        // 1. ValidaciÛn mÌnima
+        // 1. Validaciones
         if (string.IsNullOrWhiteSpace(txtEmpleado.Text) || string.IsNullOrWhiteSpace(txtProducto.Text))
         {
             await DisplayAlert("Error", "Los campos Empleado y Producto son obligatorios.", "OK");
             return;
         }
 
-        // 2. Pasar datos del formulario al objeto
+        // Validar que se seleccion√≥ un material para descontar
+        if (pkrMaterial.SelectedIndex == -1)
+        {
+            await DisplayAlert("Atenci√≥n", "Por favor selecciona el material a descontar del inventario.", "OK");
+            return;
+        }
+
+        // 2. Llenar objeto Venta
         _ventaActual.NombreEmpleado = txtEmpleado.Text;
         _ventaActual.Cliente = txtCliente.Text;
         _ventaActual.Telefono = txtTelefono.Text;
         _ventaActual.Producto = txtProducto.Text;
 
-        if (int.TryParse(txtCantidad.Text, out int cant)) _ventaActual.Cantidad = cant;
+        int cantidadVenta = 0;
+        if (int.TryParse(txtCantidad.Text, out int cant))
+        {
+            _ventaActual.Cantidad = cant;
+            cantidadVenta = cant; // Guardamos este n√∫mero para restarlo al inventario
+        }
+
         if (decimal.TryParse(txtCosto.Text, out decimal costo)) _ventaActual.Costo = costo;
 
-        // --- CORRECCI”N DE FECHAS Y DURACI”N ---
-
-        // Obtener fecha de solicitud (si es nuevo es Hoy, si es ediciÛn mantenemos la original)
+        // Fechas y Duraci√≥n
         DateTime fechaSolicitud = DateTime.Now;
-
-        // Intentamos recuperar la fecha original si es ediciÛn
         if (_esEdicion && !string.IsNullOrEmpty(_ventaActual.FechaSolicitud))
         {
             if (DateTime.TryParse(_ventaActual.FechaSolicitud, out DateTime fechaGuardada))
@@ -84,30 +122,42 @@ public partial class SaleFormPage : ContentPage
             }
         }
 
-        // Guardamos las fechas como texto
         _ventaActual.FechaSolicitud = fechaSolicitud.ToString("dd/MM/yyyy");
         _ventaActual.FechaEntrega = dpEntrega.Date.ToString("dd/MM/yyyy");
 
-        // CALCULAR DURACI”N (Ahora se calcula SIEMPRE, al crear y al editar)
-        // Usamos .Date para que la resta sea exacta en dÌas (sin horas)
         TimeSpan diferencia = dpEntrega.Date - fechaSolicitud.Date;
         int dias = diferencia.Days;
-
-        if (dias < 0)
-            _ventaActual.Duracion = "Fecha inv·lida"; // Entrega antes de solicitud
-        else if (dias == 0)
-            _ventaActual.Duracion = "Mismo dÌa";
-        else
-            _ventaActual.Duracion = $"{dias} dÌas";
-
+        _ventaActual.Duracion = (dias <= 0) ? "Mismo d√≠a" : $"{dias} d√≠as";
         _ventaActual.Observaciones = txtObservaciones.Text;
 
-        // 3. Guardar en Base de Datos
+        // 3. Guardar Venta en BD
         var db = new DatabaseService();
         await db.GuardarVentaAsync(_ventaActual);
 
+        // ============================================================
+        // 4. ‚úÖ DESCONTAR DEL INVENTARIO (L√≥gica agregada)
+        // ============================================================
+        string nombreMaterialSeleccionado = pkrMaterial.SelectedItem.ToString();
+
+        // Buscamos el objeto real en nuestra lista usando el nombre
+        var itemInventario = _materialesDisponibles.FirstOrDefault(m => m.NombreArticulo == nombreMaterialSeleccionado);
+
+        if (itemInventario != null)
+        {
+            // Restamos la cantidad vendida
+            itemInventario.StockActual -= cantidadVenta;
+
+            // (Opcional) Evitar n√∫meros negativos
+            if (itemInventario.StockActual < 0) itemInventario.StockActual = 0;
+
+            // Guardamos la actualizaci√≥n en la base de datos
+            await db.GuardarItemInventarioAsync(itemInventario);
+        }
+        // ============================================================
+
         string accion = _esEdicion ? "actualizada" : "registrada";
-        await DisplayAlert("…xito", $"Venta {accion} correctamente.", "Aceptar");
+        await DisplayAlert("√âxito", $"Venta {accion} y stock actualizado.\n(Se descontaron {cantidadVenta} de {nombreMaterialSeleccionado})", "Aceptar");
+
         await Navigation.PopAsync();
     }
 
