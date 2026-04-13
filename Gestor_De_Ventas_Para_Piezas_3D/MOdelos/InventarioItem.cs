@@ -20,15 +20,33 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Modelos
         [Ignore]
         public string PrecioCostoFormateado => PrecioCosto.ToString("C", new CultureInfo("es-MX"));
 
-        // --- LÓGICA VISUAL ---
+        // --- LÓGICA VISUAL ACTUALIZADA ---
 
         [Ignore]
         public string Estado
         {
             get
             {
-                if (StockActual < 50) return "⚠️ Alerta: Bajo Stock";
-                if (StockActual > 80) return "⚠️ Exceso de Merma";
+                // Definimos límites según la unidad de medida
+                if (Unidad == "Mililitros" || Unidad == "Gramos")
+                {
+                    // Para líquidos o polvo (Ej. Resina): Menos de 1000 es bajo, Más de 10000 (10 L/Kg) es exceso
+                    if (StockActual < 1000) return "⚠️ Alerta: Bajo Stock";
+                    if (StockActual > 10000) return "⚠️ Exceso de Merma";
+                }
+                else if (Unidad == "Pliegos" || Unidad == "Hojas")
+                {
+                    // Para papel/vinil: Menos de 20 es bajo, Más de 500 es exceso
+                    if (StockActual < 20) return "⚠️ Alerta: Bajo Stock";
+                    if (StockActual > 500) return "⚠️ Exceso de Merma";
+                }
+                else
+                {
+                    // Para piezas, bolsas u otros por defecto (ej. Llaveros, argollas, etc.)
+                    if (StockActual < 50) return "⚠️ Alerta: Bajo Stock";
+                    if (StockActual > 200) return "⚠️ Exceso de Merma";
+                }
+
                 return "En Stock";
             }
         }
@@ -38,14 +56,15 @@ namespace Gestor_De_Ventas_Para_Piezas_3D.Modelos
         {
             get
             {
-                if (StockActual < 50) return "#E74C3C"; // Rojo
-                if (StockActual > 80) return "#F39C12"; // Naranja
+                // El color se asigna automáticamente dependiendo de lo que diga el 'Estado'
+                if (Estado == "⚠️ Alerta: Bajo Stock") return "#E74C3C"; // Rojo
+                if (Estado == "⚠️ Exceso de Merma") return "#F39C12"; // Naranja
+
                 return "#27AE60"; // Verde
             }
         }
 
-        // ✅ ESTA ES LA PROPIEDAD QUE TE FALTABA
         [Ignore]
-        public bool EsBajoStock => StockActual < 50;
+        public bool EsBajoStock => Estado == "⚠️ Alerta: Bajo Stock";
     }
 }

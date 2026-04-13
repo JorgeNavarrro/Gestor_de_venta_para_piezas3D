@@ -2,6 +2,7 @@
 using Gestor_De_Ventas_Para_Piezas_3D.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,9 +12,10 @@ public partial class SaleFormPage : ContentPage
 {
     private Venta _ventaActual;
     private bool _esEdicion;
+    private DatabaseService _dbService = new DatabaseService();
 
-    // Lista para tener los objetos del inventario a la mano
-    private List<InventarioItem> _materialesDisponibles;
+    // === NUEVO: Carrito temporal para los materiales ===
+    public ObservableCollection<ItemCarrito> CarritoMateriales { get; set; } = new ObservableCollection<ItemCarrito>();
 
     public SaleFormPage()
     {
@@ -22,7 +24,8 @@ public partial class SaleFormPage : ContentPage
         _ventaActual = new Venta();
         txtId.Text = "Nuevo (Auto)";
 
-        btnAccion.Clicked += BtnGuardar_Clicked;
+        // Conectamos la lista visual con el carrito
+        cvMaterialesAgregados.ItemsSource = CarritoMateriales;
     }
 
     public SaleFormPage(Venta ventaAEditar)
@@ -31,7 +34,8 @@ public partial class SaleFormPage : ContentPage
         _esEdicion = true;
         _ventaActual = ventaAEditar;
 
-        btnAccion.Clicked += BtnGuardar_Clicked;
+        // Conectamos la lista visual con el carrito
+        cvMaterialesAgregados.ItemsSource = CarritoMateriales;
     }
 
     protected override async void OnAppearing()
@@ -48,16 +52,16 @@ public partial class SaleFormPage : ContentPage
 
     private async Task CargarMateriales()
     {
-        var db = new DatabaseService();
-        _materialesDisponibles = await db.ObtenerInventarioAsync();
+        var inventario = await _dbService.ObtenerInventarioAsync();
 
-        if (_materialesDisponibles != null && _materialesDisponibles.Count > 0)
+        if (inventario != null && inventario.Count > 0)
         {
-            pkrMaterial.ItemsSource = _materialesDisponibles.Select(m => m.NombreArticulo).ToList();
+            // Ahora le pasamos la lista de objetos completa al Picker (el XAML ya extrae el NombreArticulo)
+            pckMateriales.ItemsSource = inventario;
         }
         else
         {
-            pkrMaterial.Title = "Inventario vacío";
+            pckMateriales.Title = "Inventario vacío";
         }
     }
 
@@ -73,7 +77,6 @@ public partial class SaleFormPage : ContentPage
         txtCliente.Text = _ventaActual.Cliente;
         txtTelefono.Text = _ventaActual.Telefono;
         txtProducto.Text = _ventaActual.Producto;
-        txtCantidad.Text = _ventaActual.Cantidad.ToString();
         txtCosto.Text = _ventaActual.Costo.ToString();
         txtObservaciones.Text = _ventaActual.Observaciones;
 
@@ -81,19 +84,53 @@ public partial class SaleFormPage : ContentPage
             dpEntrega.Date = fecha;
     }
 
-    private async void BtnGuardar_Clicked(object sender, EventArgs e)
+    // ============================================================
+    // LÓGICA DEL CARRITO DE MATERIALES
+    // ============================================================
+    private void OnAgregarMaterialClicked(object sender, EventArgs e)
+    {
+        var materialSeleccionado = pckMateriales.SelectedItem as InventarioItem;
+
+        if (materialSeleccionado != null && int.TryParse(txtCantidadMaterial.Text, out int cantidad))
+        {
+            // Agregamos a la lista
+            CarritoMateriales.Add(new ItemCarrito
+            {
+                InventarioOriginal = materialSeleccionado,
+                NombreArticulo = materialSeleccionado.NombreArticulo,
+                CantidadUsada = cantidad
+            });
+
+            // Limpiamos los campos para agregar otro rápido
+            pckMateriales.SelectedItem = null;
+            txtCantidadMaterial.Text = string.Empty;
+        }
+        else
+        {
+            DisplayAlert("Aviso", "Selecciona un material del inventario y escribe una cantidad válida.", "OK");
+        }
+    }
+
+    private void OnEliminarMaterialClicked(object sender, EventArgs e)
+    {
+        var boton = sender as ImageButton;
+        var itemAQuitar = boton?.CommandParameter as ItemCarrito;
+
+        if (itemAQuitar != null)
+        {
+            CarritoMateriales.Remove(itemAQuitar);
+        }
+    }
+
+    // ============================================================
+    // GUARDAR VENTA Y DESCONTAR INVENTARIO
+    // ============================================================
+    private async void BtnGuardarVenta_Clicked(object sender, EventArgs e)
     {
         // 1. Validaciones
         if (string.IsNullOrWhiteSpace(txtEmpleado.Text) || string.IsNullOrWhiteSpace(txtProducto.Text))
         {
             await DisplayAlert("Error", "Los campos Empleado y Producto son obligatorios.", "OK");
-            return;
-        }
-
-        // Validar que se seleccionó un material para descontar
-        if (pkrMaterial.SelectedIndex == -1)
-        {
-            await DisplayAlert("Atención", "Por favor selecciona el material a descontar del inventario.", "OK");
             return;
         }
 
@@ -103,14 +140,11 @@ public partial class SaleFormPage : ContentPage
         _ventaActual.Telefono = txtTelefono.Text;
         _ventaActual.Producto = txtProducto.Text;
 
-        int cantidadVenta = 0;
-        if (int.TryParse(txtCantidad.Text, out int cant))
-        {
-            _ventaActual.Cantidad = cant;
-            cantidadVenta = cant; // Guardamos este número para restarlo al inventario
-        }
+        // Por defecto la venta es de 1 producto principal (Figura 3D)
+        _ventaActual.Cantidad = 1;
 
-        if (decimal.TryParse(txtCosto.Text, out decimal costo)) _ventaActual.Costo = costo;
+        if (decimal.TryParse(txtCosto.Text, out decimal costo))
+            _ventaActual.Costo = costo;
 
         // Fechas y Duración
         DateTime fechaSolicitud = DateTime.Now;
@@ -128,35 +162,37 @@ public partial class SaleFormPage : ContentPage
         TimeSpan diferencia = dpEntrega.Date - fechaSolicitud.Date;
         int dias = diferencia.Days;
         _ventaActual.Duracion = (dias <= 0) ? "Mismo día" : $"{dias} días";
-        _ventaActual.Observaciones = txtObservaciones.Text;
+
+        // Si se usaron materiales, los agregamos al texto de observaciones para no perder el registro
+        if (CarritoMateriales.Count > 0)
+        {
+            string materialesUsados = "\n[Materiales extra: " + string.Join(", ", CarritoMateriales.Select(c => $"{c.CantidadUsada}x {c.NombreArticulo}")) + "]";
+            _ventaActual.Observaciones = txtObservaciones.Text + materialesUsados;
+        }
+        else
+        {
+            _ventaActual.Observaciones = txtObservaciones.Text;
+        }
 
         // 3. Guardar Venta en BD
-        var db = new DatabaseService();
-        await db.GuardarVentaAsync(_ventaActual);
+        await _dbService.GuardarVentaAsync(_ventaActual);
 
-        // ============================================================
-        // 4. ✅ DESCONTAR DEL INVENTARIO (Lógica agregada)
-        // ============================================================
-        string nombreMaterialSeleccionado = pkrMaterial.SelectedItem.ToString();
-
-        // Buscamos el objeto real en nuestra lista usando el nombre
-        var itemInventario = _materialesDisponibles.FirstOrDefault(m => m.NombreArticulo == nombreMaterialSeleccionado);
-
-        if (itemInventario != null)
+        // 4. ✅ DESCONTAR LISTA DE MATERIALES DEL INVENTARIO
+        foreach (var itemCarrito in CarritoMateriales)
         {
-            // Restamos la cantidad vendida
-            itemInventario.StockActual -= cantidadVenta;
+            // Usamos tu propiedad StockActual
+            var materialEnBD = itemCarrito.InventarioOriginal;
+            materialEnBD.StockActual -= itemCarrito.CantidadUsada;
 
             // (Opcional) Evitar números negativos
-            if (itemInventario.StockActual < 0) itemInventario.StockActual = 0;
+            if (materialEnBD.StockActual < 0) materialEnBD.StockActual = 0;
 
-            // Guardamos la actualización en la base de datos
-            await db.GuardarItemInventarioAsync(itemInventario);
+            // Actualizamos en la base de datos
+            await _dbService.GuardarItemInventarioAsync(materialEnBD);
         }
-        // ============================================================
 
         string accion = _esEdicion ? "actualizada" : "registrada";
-        await DisplayAlert("Éxito", $"Venta {accion} y stock actualizado.\n(Se descontaron {cantidadVenta} de {nombreMaterialSeleccionado})", "Aceptar");
+        await DisplayAlert("Éxito", $"Venta {accion} y stock actualizado.\n(Se descontaron {CarritoMateriales.Count} tipos de material del inventario)", "Aceptar");
 
         await Navigation.PopAsync();
     }
@@ -165,4 +201,12 @@ public partial class SaleFormPage : ContentPage
     {
         await Navigation.PopAsync();
     }
+}
+
+// === CLASE AUXILIAR PARA LA LISTA (Fuera de SaleFormPage) ===
+public class ItemCarrito
+{
+    public InventarioItem InventarioOriginal { get; set; }
+    public string NombreArticulo { get; set; }
+    public int CantidadUsada { get; set; }
 }

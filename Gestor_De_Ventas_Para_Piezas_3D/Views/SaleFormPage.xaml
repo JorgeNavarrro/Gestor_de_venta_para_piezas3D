@@ -8,7 +8,6 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Título Principal -->
             <Label x:Name="lblTitulo" 
                    Text="Registrar Nueva Venta" 
                    FontSize="28" 
@@ -17,15 +16,9 @@
                    HorizontalOptions="Center" 
                    Margin="0,10,0,10"/>
 
-            <!-- Tarjeta del Formulario -->
             <Frame BackgroundColor="White" CornerRadius="15" Padding="25" HasShadow="True" BorderColor="Transparent">
+                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnSpacing="30" RowSpacing="20">
 
-                <!-- Grid de 2 Columnas para separar los datos -->
-                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" ColumnSpacing="30" RowSpacing="20">
-
-                    <!-- === COLUMNA IZQUIERDA === -->
-
-                    <!-- 1. ID -->
                     <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
                         <Label Text="ID (Automático)" FontAttributes="Bold" TextColor="Gray"/>
                         <Frame BackgroundColor="#E5E7EB" Padding="10,0" HeightRequest="45" CornerRadius="5" BorderColor="Transparent">
@@ -33,43 +26,6 @@
                         </Frame>
                     </VerticalStackLayout>
 
-                    <!-- 2. Nombre Empleado -->
-                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
-                        <Label Text="Nombre del Empleado" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
-                            <Entry x:Name="txtEmpleado" Placeholder="Ej. Ana Martinez" TextColor="Black" VerticalOptions="Center"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- 3. Cliente -->
-                    <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="5">
-                        <Label Text="Cliente (Nombre)" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
-                            <Entry x:Name="txtCliente" Placeholder="Ej. Juan Pérez" TextColor="Black" VerticalOptions="Center"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- 4. Teléfono -->
-                    <VerticalStackLayout Grid.Row="3" Grid.Column="0" Spacing="5">
-                        <Label Text="Teléfono" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
-                            <Entry x:Name="txtTelefono" Placeholder="Ej. 9981234567" Keyboard="Telephone" TextColor="Black" VerticalOptions="Center"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- 5. Observaciones (Abajo a la izquierda o ocupando espacio propio) -->
-                    <VerticalStackLayout Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" Spacing="5">
-                        <Label Text="Observaciones" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <!-- Altura automática para evitar encimado -->
-                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10" HeightRequest="120" CornerRadius="5" VerticalOptions="Fill">
-                            <Editor x:Name="txtObservaciones" Placeholder="Escribe notas aquí..." TextColor="Black" AutoSize="TextChanges"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-
-                    <!-- === COLUMNA DERECHA === -->
-
-                    <!-- 1. Producto -->
                     <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="5">
                         <Label Text="Producto (Nombre Venta)" FontAttributes="Bold" TextColor="#1F2937"/>
                         <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
@@ -77,43 +33,87 @@
                         </Frame>
                     </VerticalStackLayout>
 
-                    <!-- 2. Material a Descontar (PICKER NUEVO) -->
-                    <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
-                        <!-- Etiqueta Naranja según tu diseño -->
-                        <Label Text="Material a Descontar" FontAttributes="Bold" TextColor="#1F2937"/>
-                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="70" CornerRadius="5">
-                            <Picker x:Name="pkrMaterial" Title="Selecciona del inventario..." TextColor="Black" TitleColor="Gray" VerticalOptions="Center"/>
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- 3. Cantidad a Descontar -->
-                    <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
-                        <Label Text="Cantidad a descontar" FontAttributes="Bold" TextColor="#1F2937"/>
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
+                        <Label Text="Nombre del Empleado" FontAttributes="Bold" TextColor="#1F2937"/>
                         <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
-                            <Entry x:Name="txtCantidad" Placeholder="Ej. 20 (g/m/pz)" Keyboard="Numeric" TextColor="Black" VerticalOptions="Center"/>
+                            <Entry x:Name="txtEmpleado" Placeholder="Ej. Ana Martinez" TextColor="Black" VerticalOptions="Center"/>
                         </Frame>
                     </VerticalStackLayout>
 
-                    <!-- 4. Costo -->
-                    <VerticalStackLayout Grid.Row="3" Grid.Column="1" Spacing="5">
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
                         <Label Text="Costo Venta (MXN)" FontAttributes="Bold" TextColor="#1F2937"/>
                         <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
                             <Entry x:Name="txtCosto" Placeholder="Ej. 500.00" Keyboard="Numeric" TextColor="Black" VerticalOptions="Center"/>
                         </Frame>
                     </VerticalStackLayout>
 
-                    <!-- 5. Fecha de Entrega -->
-                    <VerticalStackLayout Grid.Row="4" Grid.Column="1" Spacing="5">
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="0" Spacing="5">
+                        <Label Text="Cliente (Nombre)" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
+                            <Entry x:Name="txtCliente" Placeholder="Ej. Juan Pérez" TextColor="Black" VerticalOptions="Center"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="2" Grid.Column="1" Spacing="5">
                         <Label Text="Fecha de Entrega" FontAttributes="Bold" TextColor="#1F2937"/>
                         <Frame BackgroundColor="#F3F4F6" Padding="0" HeightRequest="45" CornerRadius="5" BorderColor="LightGray">
                             <DatePicker x:Name="dpEntrega" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Frame>
                     </VerticalStackLayout>
 
+                    <VerticalStackLayout Grid.Row="3" Grid.Column="0" Spacing="5">
+                        <Label Text="Teléfono" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" CornerRadius="5">
+                            <Entry x:Name="txtTelefono" Placeholder="Ej. 9981234567" Keyboard="Telephone" TextColor="Black" VerticalOptions="Center"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Spacing="5">
+                        <Label Text="Observaciones" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <Frame BackgroundColor="Transparent" BorderColor="LightGray" Padding="10" HeightRequest="80" CornerRadius="5">
+                            <Editor x:Name="txtObservaciones" Placeholder="Escribe notas aquí..." TextColor="Black" AutoSize="TextChanges"/>
+                        </Frame>
+                    </VerticalStackLayout>
+
                 </Grid>
             </Frame>
 
-            <!-- Botones de Acción -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="25" HasShadow="True" BorderColor="Transparent">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Materiales Extra y Empaque" FontAttributes="Bold" FontSize="18" TextColor="#2D4059"/>
+                    <Label Text="Agrega todo lo que se usó (Se descontará del inventario al guardar)" FontSize="12" TextColor="Gray" Margin="0,-10,0,0"/>
+
+                    <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="10">
+                        <Frame Grid.Column="0" BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="65" CornerRadius="5">
+                            <Picker x:Name="pckMateriales" Title="Selecciona del inventario..." ItemDisplayBinding="{Binding NombreArticulo}" TextColor="Black" VerticalOptions="Center"/>
+                        </Frame>
+
+                        <Frame Grid.Column="1" BackgroundColor="Transparent" BorderColor="LightGray" Padding="10,0" HeightRequest="45" WidthRequest="70" CornerRadius="5">
+                            <Entry x:Name="txtCantidadMaterial" Placeholder="Cant." Keyboard="Numeric" TextColor="Black" VerticalOptions="Center"/>
+                        </Frame>
+
+                        <Button Grid.Column="2" Text="+" Clicked="OnAgregarMaterialClicked" BackgroundColor="#5F8090" TextColor="White" CornerRadius="8" WidthRequest="45" HeightRequest="45" FontAttributes="Bold" FontSize="20"/>
+                    </Grid>
+
+                    <Frame BackgroundColor="#F9FAFB" BorderColor="#E5E7EB" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                        <CollectionView x:Name="cvMaterialesAgregados" HeightRequest="120">
+                            <CollectionView.EmptyView>
+                                <Label Text="Aún no hay materiales agregados." TextColor="Gray" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Italic"/>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*, Auto, Auto" Margin="0,5">
+                                        <Label Text="{Binding NombreArticulo}" VerticalOptions="Center" TextColor="#374151" FontSize="14"/>
+                                        <Label Text="{Binding CantidadUsada, StringFormat='x{0}'}" Grid.Column="1" VerticalOptions="Center" FontAttributes="Bold" TextColor="#2D4059" Margin="0,0,15,0"/>
+                                        <ImageButton Grid.Column="2" Source="dotnet_bot.png" BackgroundColor="Transparent" HeightRequest="20" WidthRequest="20" Clicked="OnEliminarMaterialClicked" CommandParameter="{Binding .}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                </VerticalStackLayout>
+            </Frame>
+
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="20" Margin="0,10,0,20">
                 <Button Text="Cancelar" 
                         BackgroundColor="Gray" 
@@ -131,7 +131,8 @@
                         CornerRadius="25" 
                         WidthRequest="200" 
                         HeightRequest="50"
-                        FontAttributes="Bold"/>
+                        FontAttributes="Bold"
+                        Clicked="BtnGuardarVenta_Clicked"/>
             </HorizontalStackLayout>
 
         </VerticalStackLayout>
